@@ -223,6 +223,7 @@ import { useRouter } from "next/navigation";
 export default function Page() {
 
   const [openCategory, setOpenCategory] = useState(null);
+  const [openedMenu, setOpenedMenu] = useState("🍢 Kabablar");
   const [cart, setCart] = useState([]);
   const [table, setTable] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
@@ -691,17 +692,28 @@ const addToCart = (item, e) => {
       {menuData.map(section => (
         <div key={section.title}>
           <h2
+  onClick={() =>
+    setOpenedMenu(
+      openedMenu === section.title
+        ? null
+        : section.title
+    )
+  }
   style={{
     color: "#f5c542",
-    marginTop: 30,
-    marginBottom: 15,
-    paddingBottom: 8,
-    borderBottom: "2px solid rgba(245,197,66,0.3)",
+    cursor: "pointer",
+    padding: 12,
+    borderRadius: 12,
+    background: "rgba(245,197,66,0.08)",
+    marginTop: 20,
   }}
 >
   {section.title}
+  {" "}
+  {openedMenu === section.title ? "▲" : "▼"}
 </h2>
-
+{openedMenu === section.title && (
+  <>
         {section.items
   .filter(item => {
     const matchSearch = item.name
@@ -763,6 +775,9 @@ const addToCart = (item, e) => {
 </button>
                 </div>
             ))}
+    </>
+)}
+
         </div>
       ))}
 
