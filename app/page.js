@@ -503,9 +503,21 @@ const addToCart = (item, e) => {
     🍽️ {t.title}
   </h1>
 
-  <button onClick={() => setDark(!dark)}>
-    {dark ? "☀️ Light" : "🌙 Dark"}
-  </button>
+  <button
+  onClick={() => setDark(!dark)}
+  style={{
+    padding: "10px 14px",
+    borderRadius: 12,
+    background: "#1e1e1e",
+    color: "#f5c542",
+    border: "1px solid #f5c542",
+    boxShadow: "0 0 10px rgba(245,197,66,0.2)",
+    cursor: "pointer",
+    fontWeight: "bold",
+  }}
+>
+  {dark ? "☀️" : "🌙"}
+</button>
 
   <button onClick={() => setTable(null)}>
     🔄 Masa dəyiş
