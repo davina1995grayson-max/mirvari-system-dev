@@ -828,11 +828,23 @@ const addToCart = (item, e) => {
               >
           
                 <div>
-  <div style={{ fontWeight: "bold" }}>
+  <div
+    style={{
+      fontSize: 16,
+      fontWeight: 600,
+      marginBottom: 4,
+    }}
+  >
     {item.name}
   </div>
 
-  <div>
+  <div
+    style={{
+      color: "#f5c542",
+      fontSize: 14,
+      fontWeight: 500,
+    }}
+  >
     {item.price} AZN
   </div>
 </div>
@@ -850,15 +862,19 @@ const addToCart = (item, e) => {
     }, 120);
   }}
   style={{
-    marginLeft: 8,
-    border: "none",
-    borderRadius: 10,
-    padding: "4px 10px",
-    cursor: "pointer",
-    transition: "0.2s",
-    background: "#f5c542",
-    fontWeight: "bold",
-  }}
+  marginLeft: 8,
+  border: "none",
+  borderRadius: 12,
+  width: 42,
+  height: 42,
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+  background: "linear-gradient(135deg, #f5c542, #d8a92e)",
+  color: "#111",
+  fontWeight: "bold",
+  fontSize: 18,
+  boxShadow: "0 0 12px rgba(245,197,66,0.35)",
+}}
 >
   ➕
 </button>
