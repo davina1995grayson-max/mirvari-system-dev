@@ -408,6 +408,16 @@ const addToCart = (item, e) => {
     `${itemsText}\n\n` +
     `💰 TOTAL: ${total} AZN`;
 
+    window.open(
+    `https://wa.me/994553976762?text=${encodeURIComponent(text)}`
+  );
+};
+
+  const callWaiter = () => {
+  const text =
+    `🔔 OFİSİANT ÇAĞIRILDI\n\n` +
+    `🪑 Masa: ${table}`;
+
   window.open(
     `https://wa.me/994553976762?text=${encodeURIComponent(text)}`
   );
