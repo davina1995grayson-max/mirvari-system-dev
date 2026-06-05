@@ -515,42 +515,48 @@ const addToCart = (item, e) => {
       <p>📍 Baku · Pirallahi</p>
       <p>🪑 Masa: {table}</p>
 
-      <button
-  onClick={callWaiter}
+<div
   style={{
-    width: "100%",
-    padding: 14,
+    display: "flex",
+    gap: 10,
     marginTop: 10,
     marginBottom: 15,
-    border: "none",
-    borderRadius: 12,
-    background: "#4CAF50",
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-    cursor: "pointer",
   }}
 >
-  🔔 Ofisiant çağır
-</button>
-    
-    <button
-  onClick={callBill}
-  style={{
-    width: "100%",
-    padding: 14,
-    marginBottom: 15,
-    border: "none",
-    borderRadius: 12,
-    background: "#2196F3",
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-    cursor: "pointer",
-  }}
->
-  💳 Hesab gətir
-</button>
+  <button
+    onClick={callWaiter}
+    style={{
+      flex: 1,
+      padding: 14,
+      border: "none",
+      borderRadius: 12,
+      background: "#4CAF50",
+      color: "white",
+      fontSize: 16,
+      fontWeight: "bold",
+      cursor: "pointer",
+    }}
+  >
+    🔔 Ofisiant
+  </button>
+
+  <button
+    onClick={callBill}
+    style={{
+      flex: 1,
+      padding: 14,
+      border: "none",
+      borderRadius: 12,
+      background: "#2196F3",
+      color: "white",
+      fontSize: 16,
+      fontWeight: "bold",
+      cursor: "pointer",
+    }}
+  >
+    💳 Hesab
+  </button>
+</div>
     
       <input
         value={search}
