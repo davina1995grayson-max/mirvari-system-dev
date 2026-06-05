@@ -535,40 +535,62 @@ const addToCart = (item, e) => {
   }}
 >
   <button
-    onClick={callWaiter}
-    style={{
-  flex: 1,
-  padding: 14,
-  borderRadius: 12,
-  background: "#1e1e1e",
-  color: "#f5c542",
-  border: "1px solid #f5c542",
-  boxShadow: "0 0 10px rgba(245,197,66,0.2)",
-  fontSize: 16,
-  fontWeight: "bold",
-  cursor: "pointer",
-}}
-  >
-    🔔 Ofisiant
-  </button>
+  onClick={callWaiter}
+  style={{
+    flex: 1,
+    padding: 14,
+    borderRadius: 12,
+    background: "#1e1e1e",
+    color: "#f5c542",
+    border: "1px solid #f5c542",
+    boxShadow: "0 0 12px rgba(245,197,66,0.35)",
+    fontSize: 16,
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "all 0.25s ease",
+  }}
+  onMouseOver={(e) => {
+    e.currentTarget.style.boxShadow =
+      "0 0 18px rgba(245,197,66,0.7)";
+    e.currentTarget.style.transform = "scale(1.04)";
+  }}
+  onMouseOut={(e) => {
+    e.currentTarget.style.boxShadow =
+      "0 0 12px rgba(245,197,66,0.35)";
+    e.currentTarget.style.transform = "scale(1)";
+  }}
+>
+  🔔 Ofisiant
+</button>
 
   <button
-    onClick={callBill}
-    style={{
-  flex: 1,
-  padding: 14,
-  borderRadius: 12,
-  background: "#1e1e1e",
-  color: "#f5c542",
-  border: "1px solid #f5c542",
-  boxShadow: "0 0 10px rgba(245,197,66,0.2)",
-  fontSize: 16,
-  fontWeight: "bold",
-  cursor: "pointer",
-}}
-  >
-    💳 Hesab
-  </button>
+  onClick={callBill}
+  style={{
+    flex: 1,
+    padding: 14,
+    borderRadius: 12,
+    background: "#1e1e1e",
+    color: "#f5c542",
+    border: "1px solid #f5c542",
+    boxShadow: "0 0 12px rgba(245,197,66,0.35)",
+    fontSize: 16,
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "all 0.25s ease",
+  }}
+  onMouseOver={(e) => {
+    e.currentTarget.style.boxShadow =
+      "0 0 18px rgba(245,197,66,0.7)";
+    e.currentTarget.style.transform = "scale(1.04)";
+  }}
+  onMouseOut={(e) => {
+    e.currentTarget.style.boxShadow =
+      "0 0 12px rgba(245,197,66,0.35)";
+    e.currentTarget.style.transform = "scale(1)";
+  }}
+>
+  💳 Hesab
+</button>
 </div>
     
       <input
