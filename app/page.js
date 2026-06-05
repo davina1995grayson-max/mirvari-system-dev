@@ -422,7 +422,15 @@ const addToCart = (item, e) => {
     `https://wa.me/994553976762?text=${encodeURIComponent(text)}`
   );
 };
+  const callBill = () => {
+  const text =
+    `💳 HESAB İSTƏNİLDİ\n\n` +
+    `🪑 Masa: ${table}`;
 
+  window.open(
+    `https://wa.me/994553976762?text=${encodeURIComponent(text)}`
+  );
+};
   const bg = dark ? "#0f0f0f" : "#f5f5f5";
   const textColor = dark ? "white" : "black";
   const card = dark ? "#1e1e1e" : "#ffffff";
@@ -524,6 +532,24 @@ const addToCart = (item, e) => {
   }}
 >
   🔔 Ofisiant çağır
+</button>
+    
+    <button
+  onClick={callBill}
+  style={{
+    width: "100%",
+    padding: 14,
+    marginBottom: 15,
+    border: "none",
+    borderRadius: 12,
+    background: "#2196F3",
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+    cursor: "pointer",
+  }}
+>
+  💳 Hesab gətir
 </button>
     
       <input
