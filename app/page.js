@@ -497,6 +497,25 @@ const addToCart = (item, e) => {
       <p>📍 Baku · Pirallahi</p>
       <p>🪑 Masa: {table}</p>
 
+      <button
+  onClick={callWaiter}
+  style={{
+    width: "100%",
+    padding: 14,
+    marginTop: 10,
+    marginBottom: 15,
+    border: "none",
+    borderRadius: 12,
+    background: "#4CAF50",
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+    cursor: "pointer",
+  }}
+>
+  🔔 Ofisiant çağır
+</button>
+    
       <input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
