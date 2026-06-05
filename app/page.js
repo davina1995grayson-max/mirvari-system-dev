@@ -506,22 +506,18 @@ const addToCart = (item, e) => {
    <button
   onClick={() => setTable(null)}
   style={{
-    background: "#111",
-    color: "#f5c542",
-    border: "1px solid #f5c542",
+    background: "linear-gradient(135deg, #f5c542, #e0aa2b)",
+    color: "#111",
+    border: "none",
     padding: "10px 14px",
-    borderRadius: 14,
+    borderRadius: 12,
     fontWeight: "bold",
     cursor: "pointer",
-    boxShadow: "0 0 12px rgba(245, 197, 66, 0.4)",
-    transition: "0.2s",
+    boxShadow: "0 4px 12px rgba(245, 197, 66, 0.25)",
+    transition: "all 0.2s ease",
   }}
-  onMouseOver={(e) =>
-    (e.currentTarget.style.boxShadow = "0 0 18px rgba(245, 197, 66, 0.7)")
-  }
-  onMouseOut={(e) =>
-    (e.currentTarget.style.boxShadow = "0 0 12px rgba(245, 197, 66, 0.4)")
-  }
+  onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
 >
   🔄 Masa dəyiş
 </button>
