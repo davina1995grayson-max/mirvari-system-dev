@@ -525,7 +525,8 @@ const addToCart = (item, e) => {
 >
   🔄 Masa dəyiş
 </button>
-
+</div>
+    
       <p>📍 Baku · Pirallahi</p>
       <p>🪑 Masa: {table}</p>
 
