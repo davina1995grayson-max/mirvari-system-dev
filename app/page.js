@@ -503,10 +503,28 @@ const addToCart = (item, e) => {
     🍽️ {t.title}
   </h1>
 
-  <button onClick={() => setTable(null)}>
-    🔄 Masa dəyiş
-  </button>
-</div>
+   <button
+  onClick={() => setTable(null)}
+  style={{
+    background: "#111",
+    color: "#f5c542",
+    border: "1px solid #f5c542",
+    padding: "10px 14px",
+    borderRadius: 14,
+    fontWeight: "bold",
+    cursor: "pointer",
+    boxShadow: "0 0 12px rgba(245, 197, 66, 0.4)",
+    transition: "0.2s",
+  }}
+  onMouseOver={(e) =>
+    (e.currentTarget.style.boxShadow = "0 0 18px rgba(245, 197, 66, 0.7)")
+  }
+  onMouseOut={(e) =>
+    (e.currentTarget.style.boxShadow = "0 0 12px rgba(245, 197, 66, 0.4)")
+  }
+>
+  🔄 Masa dəyiş
+</button>
 
       <p>📍 Baku · Pirallahi</p>
       <p>🪑 Masa: {table}</p>
