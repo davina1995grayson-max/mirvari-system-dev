@@ -526,16 +526,16 @@ const addToCart = (item, e) => {
   <button
     onClick={callWaiter}
     style={{
-      flex: 1,
-      padding: 14,
-      border: "none",
-      borderRadius: 12,
-      background: "#4CAF50",
-      color: "white",
-      fontSize: 16,
-      fontWeight: "bold",
-      cursor: "pointer",
-    }}
+  flex: 1,
+  padding: 14,
+  borderRadius: 12,
+  background: "#1e1e1e",
+  color: "#f5c542",
+  border: "1px solid #f5c542",
+  fontSize: 16,
+  fontWeight: "bold",
+  cursor: "pointer",
+}}
   >
     🔔 Ofisiant
   </button>
@@ -543,16 +543,16 @@ const addToCart = (item, e) => {
   <button
     onClick={callBill}
     style={{
-      flex: 1,
-      padding: 14,
-      border: "none",
-      borderRadius: 12,
-      background: "#2196F3",
-      color: "white",
-      fontSize: 16,
-      fontWeight: "bold",
-      cursor: "pointer",
-    }}
+  flex: 1,
+  padding: 14,
+  borderRadius: 12,
+  background: "#1e1e1e",
+  color: "#f5c542",
+  border: "1px solid #f5c542",
+  fontSize: 16,
+  fontWeight: "bold",
+  cursor: "pointer",
+}}
   >
     💳 Hesab
   </button>
