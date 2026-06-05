@@ -690,7 +690,17 @@ const addToCart = (item, e) => {
       {/* MENU */}
       {menuData.map(section => (
         <div key={section.title}>
-          <h2 style={{ color: "#f5c542" }}>{section.title}</h2>
+          <h2
+  style={{
+    color: "#f5c542",
+    marginTop: 30,
+    marginBottom: 15,
+    paddingBottom: 8,
+    borderBottom: "2px solid rgba(245,197,66,0.3)",
+  }}
+>
+  {section.title}
+</h2>
 
         {section.items
   .filter(item => {
@@ -704,12 +714,16 @@ const addToCart = (item, e) => {
               <div
                 key={item.name}
                 style={{
-                  background: card,
-                  marginTop: 8,
-                  padding: 12,
-                  display: "flex",
-                  justifyContent: "space-between"
-                }}
+  background: card,
+  marginTop: 12,
+  padding: 16,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  borderRadius: 16,
+  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+  transition: "0.2s",
+}}
               >
           
                 <div>
@@ -971,7 +985,7 @@ const addToCart = (item, e) => {
     padding: 12,
     border: "none",
     borderRadius: 10,
-    background: "#f5c542",
+    boxShadow: "0 6px 20px rgba(245,197,66,0.5)",
     fontWeight: "bold",
     cursor: "pointer",
   }}
