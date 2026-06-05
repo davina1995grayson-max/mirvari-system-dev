@@ -814,15 +814,16 @@ const addToCart = (item, e) => {
               <div
                 key={item.name}
                 style={{
-  background: card,
-  marginTop: 12,
-  padding: 16,
+  background: dark ? "#151515" : "#ffffff",
+  marginTop: 10,
+  padding: "14px 16px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   borderRadius: 16,
+  border: "1px solid rgba(245,197,66,0.12)",
   boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-  transition: "0.2s",
+  transition: "all 0.2s ease",
 }}
               >
           
