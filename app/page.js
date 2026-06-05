@@ -47,20 +47,6 @@ import { useRouter } from "next/navigation";
     ],
   },
   {
-    title: "🧒 Uşaq Menyusu",
-    items: [
-      { name: "Uşaq Combo (tam set)", price: 15, available: true },
-      { name: "Toyuq çöp şiş", price: 0, available: true },
-      { name: "Ət burger", price: 0, available: true },
-      { name: "Kartof fri", price: 0, available: true },
-      { name: "Nugets", price: 0, available: true },
-      { name: "Pendir çubuqları", price: 0, available: true },
-      { name: "Ketçup", price: 0, available: true },
-      { name: "Mayonez", price: 0, available: true },
-      { name: "Çöplü şok", price: 0, available: true },
-    ],
-  },
-  {
     title: "🔥 İsti Qəlyanaltılar",
     items: [
       { name: "Blinçik (ət)", price: 2, available: true },
