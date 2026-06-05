@@ -438,15 +438,13 @@ const addToCart = (item, e) => {
   if (table === null) {
     return (
       <div style={{
-        minHeight: "100vh",
-        background: "#111",
-        color: "white",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20
-      }}>
+  background: dark ? "#0b0b0b" : "#f6f6f6",
+  color: dark ? "#fff" : "#111",
+  minHeight: "100vh",
+  padding: 24,
+  fontFamily: "'Inter', sans-serif",
+  letterSpacing: "0.2px",
+}}>
         <h1
   style={{
     color: "#f5c542",
