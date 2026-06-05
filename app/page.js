@@ -223,7 +223,7 @@ import { useRouter } from "next/navigation";
 export default function Page() {
 
   const [openCategory, setOpenCategory] = useState(null);
-  const [openedMenu, setOpenedMenu] = useState("🍢 Kabablar");
+  const [openedMenu, setOpenedMenu] = useState(null);
   const [cart, setCart] = useState([]);
   const [table, setTable] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
