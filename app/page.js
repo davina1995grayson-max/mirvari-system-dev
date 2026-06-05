@@ -780,18 +780,26 @@ const addToCart = (item, e) => {
     )
   }
   style={{
+    fontFamily: "'Playfair Display', serif",
+    fontSize: 22,
     color: "#f5c542",
     cursor: "pointer",
-    padding: 12,
-    borderRadius: 12,
+    padding: 14,
+    borderRadius: 14,
     background: "rgba(245,197,66,0.08)",
-    marginTop: 20,
+    marginTop: 24,
+    marginBottom: 8,
+    border: "1px solid rgba(245,197,66,0.15)",
+    letterSpacing: "0.5px",
+    boxShadow: "0 0 12px rgba(245,197,66,0.08)",
+    transition: "all 0.2s ease",
   }}
 >
   {section.title}
   {" "}
   {openedMenu === section.title ? "▲" : "▼"}
 </h2>
+
 {openedMenu === section.title && (
   <>
         {section.items
