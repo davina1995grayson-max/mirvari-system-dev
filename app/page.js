@@ -834,6 +834,7 @@ const addToCart = (item, e) => {
       fontSize: 16,
       fontWeight: 600,
       marginBottom: 4,
+      fontStyle: "italic",
     }}
   >
     {item.name}
