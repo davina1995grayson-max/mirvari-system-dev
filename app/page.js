@@ -782,6 +782,7 @@ const addToCart = (item, e) => {
   style={{
     fontFamily: "'Playfair Display', serif",
     fontSize: 22,
+    fontStyle: "italic",
     color: "#f5c542",
     cursor: "pointer",
     padding: 14,
