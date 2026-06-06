@@ -831,11 +831,12 @@ const addToCart = (item, e) => {
                 <div>
   <div
   style={{
-    fontSize: 24,
-    fontWeight: 600,
-    marginBottom: 4,
+    fontFamily: "'Playfair Display', serif",
+    fontSize: 20,
+    fontWeight: 500,
     fontStyle: "italic",
-    color: "red",
+    marginBottom: 4,
+    color: textColor,
   }}
 >
   {item.name}
