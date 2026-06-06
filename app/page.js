@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
   {
     title: "🥗 Soyuq Qəlyanaltılar",
     items: [
-      { name: "Pomidor və xiyar", price: 4, available: true },
+      { name: "Pomidor & xiyar", price: 4, available: true },
       { name: "Göyərti çeşidləri", price: 2, available: true },
       { name: "Süzmə", price: 3, available: true },
       { name: "Zeytun çeşidləri", price: 3, available: true },
