@@ -830,15 +830,16 @@ const addToCart = (item, e) => {
           
                 <div>
   <div
-    style={{
-      fontSize: 16,
-      fontWeight: 600,
-      marginBottom: 4,
-      fontStyle: "italic",
-    }}
-  >
-    {item.name}
-  </div>
+  style={{
+    fontSize: 24,
+    fontWeight: 600,
+    marginBottom: 4,
+    fontStyle: "italic",
+    color: "red",
+  }}
+>
+  {item.name}
+</div>
 
   <div
     style={{
