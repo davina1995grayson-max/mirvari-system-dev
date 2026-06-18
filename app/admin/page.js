@@ -111,14 +111,6 @@ useEffect(() => {
   loadMenu();
 }, []);
 
-  // SAVE
-  useEffect(() => {
-  localStorage.setItem(
-    "mirvariMenuData",
-    JSON.stringify(menuData)
-  );
-}, [menuData]);
-
   const updateName = (section, oldName, newName) => {
     setMenuData((prev) =>
       prev.map((s) =>
