@@ -217,6 +217,18 @@ const uploadMenuToSupabase = async () => {
     });
   });
 
+  // Удаляем старое меню
+  const { error: deleteError } = await supabase
+    .from("menu")
+    .delete()
+    .neq("id", 0);
+
+  if (deleteError) {
+    alert("Ошибка удаления: " + deleteError.message);
+    return;
+  }
+
+  // Загружаем новое меню
   const { error } = await supabase
     .from("menu")
     .insert(dishes);
@@ -224,7 +236,7 @@ const uploadMenuToSupabase = async () => {
   if (error) {
     alert("Ошибка: " + error.message);
   } else {
-    alert("Меню загружено в Supabase!");
+    alert("Меню обновлено в Supabase!");
   }
 };
   
