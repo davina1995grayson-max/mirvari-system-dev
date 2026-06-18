@@ -74,13 +74,41 @@ const renameCategory = (oldTitle, newTitle) => {
     )
   );
 };
-  // LOAD
-  useEffect(() => {
-  const saved = localStorage.getItem("mirvariMenuData");
+  // LOAD MENU FROM SUPABASE
+useEffect(() => {
+  const loadMenu = async () => {
+    const { data, error } = await supabase
+      .from("menu")
+      .select("*");
 
-  if (saved) {
-    setMenuData(JSON.parse(saved));
-  }
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    const grouped = {};
+
+    data.forEach((item) => {
+      if (!grouped[item.category]) {
+        grouped[item.category] = [];
+      }
+
+      grouped[item.category].push({
+        name: item.name,
+        price: item.price,
+        available: item.available,
+      });
+    });
+
+    const formatted = Object.keys(grouped).map((category) => ({
+      title: category,
+      items: grouped[category],
+    }));
+
+    setMenuData(formatted);
+  };
+
+  loadMenu();
 }, []);
 
   // SAVE
