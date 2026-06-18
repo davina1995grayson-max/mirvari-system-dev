@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../supabase";
 
 export default function AdminPage() {
   const ADMIN_PASSWORD = "edik6762";
@@ -174,7 +175,31 @@ const renameCategory = (oldTitle, newTitle) => {
     setNewItemName("");
     setNewItemPrice("");
   };
+const uploadMenuToSupabase = async () => {
+  const dishes = [];
 
+  menuData.forEach((section) => {
+    section.items.forEach((item) => {
+      dishes.push({
+        name: item.name,
+        price: item.price,
+        category: section.title,
+        available: item.available,
+      });
+    });
+  });
+
+  const { error } = await supabase
+    .from("menu")
+    .insert(dishes);
+
+  if (error) {
+    alert("Ошибка: " + error.message);
+  } else {
+    alert("Меню загружено в Supabase!");
+  }
+};
+  
 if (!isAuth) {
   return (
     <div style={{ padding: 20, fontFamily: "Arial" }}>
@@ -221,6 +246,21 @@ if (!isAuth) {
   return (
     <div style={{ padding: 20, fontFamily: "Arial" }}>
       <h1>🕶️ ADMIN PANEL</h1>
+    <button
+  onClick={uploadMenuToSupabase}
+  style={{
+    padding: "10px 14px",
+    borderRadius: 10,
+    background: "#22c55e",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+    marginBottom: 20,
+    marginRight: 10,
+  }}
+>
+  🚀 Загрузить меню в Supabase
+</button>
     <button
   onClick={logout}
   style={{
