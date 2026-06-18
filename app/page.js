@@ -223,25 +223,50 @@ const [newItemPrice, setNewItemPrice] = useState("");
 const [selectedSection, setSelectedSection] = useState("");
   const [adminOpen, setAdminOpen] = useState(false);
 const pressTimer = useRef(null);
-    const [menuData, setMenuData] = useState(DEFAULT_MENU);
-  const [isAdmin, setIsAdmin] = useState(false);
-  useEffect(() => {
-  const saved = localStorage.getItem("mirvariMenuData");
+    const [menuData, setMenuData] = useState([]);
+const [isAdmin, setIsAdmin] = useState(false);
 
-  if (saved) {
-    try {
-      setMenuData(JSON.parse(saved));
-    } catch (e) {
-      console.log("Menu load error");
+useEffect(() => {
+
+  const loadMenu = async () => {
+
+    const { data, error } = await supabase
+      .from("menu")
+      .select("*");
+
+    if (error) {
+      console.log(error);
+      return;
     }
-  }
+
+    const grouped = {};
+
+    data.forEach((item) => {
+
+      if (!grouped[item.category]) {
+        grouped[item.category] = [];
+      }
+
+      grouped[item.category].push({
+        name: item.name,
+        price: item.price,
+        available: item.available,
+      });
+
+    });
+
+    const formatted = Object.keys(grouped).map((category) => ({
+      title: category,
+      items: grouped[category],
+    }));
+
+    setMenuData(formatted);
+
+  };
+
+  loadMenu();
+
 }, []);
-  useEffect(() => {
-  localStorage.setItem(
-    "mirvariMenuData",
-    JSON.stringify(menuData)
-  );
-}, [menuData]);
 
   const cartRef = useRef(null);
   const router = useRouter();
