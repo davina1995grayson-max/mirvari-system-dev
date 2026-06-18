@@ -876,6 +876,20 @@ const addToCart = (item, e) => {
   >
     {item.price} AZN
   </div>
+      {item.description && (
+  <div
+    style={{
+      marginTop: 6,
+      fontSize: 13,
+      opacity: 0.8,
+      whiteSpace: "pre-line",
+    }}
+  >
+    {Array.isArray(item.description)
+      ? item.description.join("\n")
+      : item.description}
+  </div>
+)}
 </div>
 
 <button
