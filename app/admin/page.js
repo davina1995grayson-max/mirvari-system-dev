@@ -19,6 +19,7 @@ const logout = () => {
   const [selectedSection, setSelectedSection] = useState("");
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
+  const [newItemDescription, setNewItemDescription] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
   const router = useRouter();
@@ -34,10 +35,11 @@ const logout = () => {
         items: [
           ...section.items,
           {
-            name: newItemName,
-            price: Number(newItemPrice),
-            available: true,
-          },
+  name: newItemName,
+  price: Number(newItemPrice),
+  available: true,
+  description: newItemDescription || null,
+},
         ],
       };
     })
@@ -201,11 +203,12 @@ const uploadMenuToSupabase = async () => {
   menuData.forEach((section) => {
     section.items.forEach((item) => {
       dishes.push({
-        name: item.name,
-        price: item.price,
-        category: section.title,
-        available: item.available,
-      });
+  name: item.name,
+  price: item.price,
+  category: section.title,
+  available: item.available,
+  description: item.description || null,
+});
     });
   });
 
@@ -364,6 +367,19 @@ if (!isAuth) {
           value={newItemPrice}
           onChange={(e) => setNewItemPrice(e.target.value)}
         />
+
+            <textarea
+  placeholder="Описание (для сетов)"
+  value={newItemDescription}
+  onChange={(e) => setNewItemDescription(e.target.value)}
+  style={{
+    width: "100%",
+    minHeight: 70,
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 8,
+  }}
+/>
 
         <button onClick={addItem}>Add</button>
       </div>
