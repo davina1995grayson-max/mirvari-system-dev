@@ -48,6 +48,7 @@ const logout = () => {
   setNewItemName("");
   setNewItemPrice("");
   setActiveCategory("");
+  setNewItemDescription("");
 };
   const addCategory = () => {
   if (!newCategory.trim()) return;
