@@ -200,7 +200,42 @@ useEffect(() => {
     setNewItemName("");
     setNewItemPrice("");
   };
-const uploadMenuToSupabase = async () => {
+const addSet = () => {
+  if (!selectedSection || !newItemName || !newItemPrice) return;
+
+  const itemsArray = newSetItems
+    .split("\n")
+    .filter((i) => i.trim() !== "")
+    .map((i) => ({
+      name: i.trim(),
+      price: 0,
+    }));
+
+  setMenuData((prev) =>
+    prev.map((section) =>
+      section.title === selectedSection
+        ? {
+            ...section,
+            items: [
+              ...section.items,
+              {
+                name: newItemName,
+                price: Number(newItemPrice),
+                available: true,
+                type: "set",
+                items: itemsArray,
+              },
+            ],
+          }
+        : section
+    )
+  );
+
+  setNewItemName("");
+  setNewItemPrice("");
+  setNewSetItems("");
+};
+  const uploadMenuToSupabase = async () => {
   const dishes = [];
 
   menuData.forEach((section) => {
@@ -384,7 +419,21 @@ if (!isAuth) {
 />
 
         <button onClick={addItem}>Add</button>
-      </div>
+<button
+  onClick={addSet}
+  style={{
+    marginLeft: 10,
+    background: "#f5c542",
+    border: "none",
+    padding: "8px 12px",
+    borderRadius: 8,
+    fontWeight: "bold",
+    cursor: "pointer",
+  }}
+>
+  🎁 Add Set
+</button>
+    </div>
 
       <hr />
 
