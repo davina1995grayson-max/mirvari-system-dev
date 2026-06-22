@@ -22,6 +22,7 @@ const logout = () => {
   const [newItemDescription, setNewItemDescription] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
+  const [newSetItems, setNewSetItems] = useState("");
   const router = useRouter();
   const addItemToCategory = (categoryTitle) => {
   if (!newItemName || !newItemPrice) return;
@@ -39,6 +40,7 @@ const logout = () => {
   price: Number(newItemPrice),
   available: true,
   description: newItemDescription || null,
+  type: "item"        
 },
         ],
       };
@@ -370,15 +372,14 @@ if (!isAuth) {
         />
 
             <textarea
-  placeholder="Описание (для сетов)"
-  value={newItemDescription}
-  onChange={(e) => setNewItemDescription(e.target.value)}
+  placeholder="Состав сета (каждое блюдо с новой строки)"
+  value={newSetItems}
+  onChange={(e) => setNewSetItems(e.target.value)}
   style={{
     width: "100%",
-    minHeight: 70,
-    padding: 8,
-    borderRadius: 8,
+    height: 80,
     marginTop: 8,
+    padding: 8,
   }}
 />
 
