@@ -706,7 +706,48 @@ const addToCart = (item, e) => {
           borderRadius: 8,
         }}
       >
-        <div>{item.name}</div>
+        <div
+  key={item.name}
+  style={{
+    background: "#1e1e1e",
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 6,
+  }}
+>
+  {/* строка блюда */}
+  <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div>
+      <div>{item.name}</div>
+      <div style={{ color: "#f5c542" }}>
+        {item.price} AZN
+      </div>
+    </div>
+
+    <button
+      onClick={(e) => addToCart(item, e)}
+      style={{
+        background: "#f5c542",
+        border: "none",
+        borderRadius: 8,
+        padding: "6px 10px",
+        cursor: "pointer",
+      }}
+    >
+      ➕
+    </button>
+  </div>
+
+  {/* 🍱 СЕТ */}
+  {item.type === "set" && (
+    <div style={{ marginTop: 10, fontSize: 13, opacity: 0.8 }}>
+      <b>Состав:</b>
+      {item.items?.map((i, idx) => (
+        <div key={idx}>• {i.name}</div>
+      ))}
+    </div>
+  )}
+</div>
       </div>
     ))}
   </>
