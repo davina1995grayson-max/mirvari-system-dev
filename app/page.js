@@ -254,11 +254,14 @@ console.log("DATA FROM SUPABASE:", data); // 👈 ВОТ СЮДА
   price: item.price,
   available: item.available,
 
-  // 👇 ДОБАВЬ ЭТО
-  items: item.items,
-  type: item.type,
-});
+  type: item.type || null,
 
+  items: item.items
+    ? (typeof item.items === "string"
+        ? JSON.parse(item.items)
+        : item.items)
+    : null,
+});
     });
 
     const formatted = Object.keys(grouped).map((category) => ({
