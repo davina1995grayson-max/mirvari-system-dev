@@ -248,10 +248,14 @@ useEffect(() => {
       }
 
       grouped[item.category].push({
-        name: item.name,
-        price: item.price,
-        available: item.available,
-      });
+  name: item.name,
+  price: item.price,
+  available: item.available,
+
+  // 👇 ДОБАВЬ ЭТО
+  items: item.items,
+  type: item.type,
+});
 
     });
 
