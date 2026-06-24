@@ -246,6 +246,10 @@ const addSet = () => {
   category: section.title,
   available: item.available,
   description: item.description || null,
+
+       // 👇 ДОБАВЬ ЭТО
+  type: item.type || null,
+  items: item.items || null, 
 });
     });
   });
