@@ -231,8 +231,10 @@ useEffect(() => {
   const loadMenu = async () => {
 
     const { data, error } = await supabase
-      .from("menu")
-      .select("*");
+  .from("menu")
+  .select("*");
+
+console.log("DATA FROM SUPABASE:", data); // 👈 ВОТ СЮДА
 
     if (error) {
       console.log(error);
