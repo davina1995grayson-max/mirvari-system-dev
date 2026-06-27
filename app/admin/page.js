@@ -22,32 +22,6 @@ const logout = () => {
   const [newItemDescription, setNewItemDescription] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const router = useRouter();
-  const addItemToCategory = (categoryTitle) => {
-  if (!newItemName || !newItemPrice) return;
-
-  setMenuData((prev) =>
-    prev.map((section) => {
-      if (section.title !== categoryTitle) return section;
-
-      return {
-        ...section,
-        items: [
-          ...section.items,
-          {
-            name: newItemName,
-            price: Number(newItemPrice),
-            available: true,
-            description: newItemDescription || null,
-          },
-        ],
-      };
-    })
-  );
-
-  setNewItemName("");
-  setNewItemPrice("");
-  setNewItemDescription("");
-};
   const addCategory = () => {
   if (!newCategory.trim()) return;
 
@@ -208,10 +182,6 @@ useEffect(() => {
   category: section.title,
   available: item.available,
   description: item.description || null,
-
-       // 👇 ДОБАВЬ ЭТО
-  type: item.type || null,
-  items: item.items || null, 
 });
     });
   });
