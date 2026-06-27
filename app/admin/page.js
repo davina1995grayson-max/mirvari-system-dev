@@ -38,17 +38,12 @@ export default function AdminPage() {
     const loadMenu = async () => {
       const { data, error } = await supabase.from("menu").select("*");
 
-      if (error) {
-        console.log(error);
-        return;
-      }
+      if (error) return console.log(error);
 
       const grouped = {};
 
       data.forEach((item) => {
-        if (!grouped[item.category]) {
-          grouped[item.category] = [];
-        }
+        if (!grouped[item.category]) grouped[item.category] = [];
 
         grouped[item.category].push({
           name: item.name,
@@ -80,12 +75,32 @@ export default function AdminPage() {
     setNewCategory("");
   };
 
+  const deleteCategory = (title) => {
+    setMenuData((prev) => prev.filter((c) => c.title !== title));
+  };
+
   const renameCategory = (oldTitle, newTitle) => {
     setMenuData((prev) =>
-      prev.map((s) =>
-        s.title === oldTitle ? { ...s, title: newTitle } : s
+      prev.map((c) =>
+        c.title === oldTitle ? { ...c, title: newTitle } : c
       )
     );
+  };
+
+  // MOVE CATEGORY
+  const moveCategory = (index, direction) => {
+    setMenuData((prev) => {
+      const arr = [...prev];
+      const newIndex = index + direction;
+
+      if (newIndex < 0 || newIndex >= arr.length) return prev;
+
+      const temp = arr[index];
+      arr[index] = arr[newIndex];
+      arr[newIndex] = temp;
+
+      return arr;
+    });
   };
 
   // ITEMS
@@ -93,12 +108,12 @@ export default function AdminPage() {
     if (!selectedSection || !newItemName || !newItemPrice) return;
 
     setMenuData((prev) =>
-      prev.map((s) =>
-        s.title === selectedSection
+      prev.map((c) =>
+        c.title === selectedSection
           ? {
-              ...s,
+              ...c,
               items: [
-                ...s.items,
+                ...c.items,
                 {
                   name: newItemName,
                   price: Number(newItemPrice),
@@ -106,7 +121,7 @@ export default function AdminPage() {
                 },
               ],
             }
-          : s
+          : c
       )
     );
 
@@ -116,52 +131,52 @@ export default function AdminPage() {
 
   const updateItem = (section, oldName, field, value) => {
     setMenuData((prev) =>
-      prev.map((s) =>
-        s.title === section
+      prev.map((c) =>
+        c.title === section
           ? {
-              ...s,
-              items: s.items.map((i) =>
+              ...c,
+              items: c.items.map((i) =>
                 i.name === oldName
                   ? { ...i, [field]: value }
                   : i
               ),
             }
-          : s
+          : c
       )
     );
   };
 
   const deleteItem = (section, name) => {
     setMenuData((prev) =>
-      prev.map((s) =>
-        s.title === section
+      prev.map((c) =>
+        c.title === section
           ? {
-              ...s,
-              items: s.items.filter((i) => i.name !== name),
+              ...c,
+              items: c.items.filter((i) => i.name !== name),
             }
-          : s
+          : c
       )
     );
   };
 
   const toggleItem = (section, name) => {
     setMenuData((prev) =>
-      prev.map((s) =>
-        s.title === section
+      prev.map((c) =>
+        c.title === section
           ? {
-              ...s,
-              items: s.items.map((i) =>
+              ...c,
+              items: c.items.map((i) =>
                 i.name === name
                   ? { ...i, available: !i.available }
                   : i
               ),
             }
-          : s
+          : c
       )
     );
   };
 
-  // SAVE TO SUPABASE
+  // SAVE
   const uploadMenuToSupabase = async () => {
     const dishes = [];
 
@@ -179,11 +194,8 @@ export default function AdminPage() {
     await supabase.from("menu").delete().neq("id", 0);
     const { error } = await supabase.from("menu").insert(dishes);
 
-    if (error) {
-      alert(error.message);
-    } else {
-      alert("Menu updated!");
-    }
+    if (error) alert(error.message);
+    else alert("Menu updated!");
   };
 
   // LOGIN SCREEN
@@ -196,7 +208,6 @@ export default function AdminPage() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
         />
 
         <button
@@ -204,9 +215,7 @@ export default function AdminPage() {
             if (password === ADMIN_PASSWORD) {
               setIsAuth(true);
               localStorage.setItem("adminAuth", "true");
-            } else {
-              alert("Wrong password");
-            }
+            } else alert("Wrong password");
           }}
         >
           Login
@@ -221,14 +230,15 @@ export default function AdminPage() {
       <h1>ADMIN PANEL</h1>
 
       <button onClick={uploadMenuToSupabase}>
-        Save to Supabase
+        💾 Save
       </button>
 
       <button onClick={logout}>Logout</button>
 
       <hr />
 
-      <h3>Add Category</h3>
+      <h3>Categories</h3>
+
       <input
         value={newCategory}
         onChange={(e) => setNewCategory(e.target.value)}
@@ -237,38 +247,7 @@ export default function AdminPage() {
 
       <hr />
 
-      <h3>Add Item</h3>
-
-      <select
-        value={selectedSection}
-        onChange={(e) => setSelectedSection(e.target.value)}
-      >
-        <option value="">Select category</option>
-        {menuData.map((s) => (
-          <option key={s.title} value={s.title}>
-            {s.title}
-          </option>
-        ))}
-      </select>
-
-      <input
-        placeholder="Name"
-        value={newItemName}
-        onChange={(e) => setNewItemName(e.target.value)}
-      />
-
-      <input
-        placeholder="Price"
-        type="number"
-        value={newItemPrice}
-        onChange={(e) => setNewItemPrice(e.target.value)}
-      />
-
-      <button onClick={addItem}>Add Item</button>
-
-      <hr />
-
-      {menuData.map((section) => (
+      {menuData.map((section, index) => (
         <div key={section.title}>
           <input
             value={section.title}
@@ -276,6 +255,13 @@ export default function AdminPage() {
               renameCategory(section.title, e.target.value)
             }
           />
+
+          <button onClick={() => moveCategory(index, -1)}>⬆️</button>
+          <button onClick={() => moveCategory(index, 1)}>⬇️</button>
+
+          <button onClick={() => deleteCategory(section.title)}>
+            🗑 Delete
+          </button>
 
           {section.items.map((item) => (
             <div key={item.name}>
@@ -287,16 +273,14 @@ export default function AdminPage() {
               />
 
               <input
-                type="number"
                 value={item.price}
+                type="number"
                 onChange={(e) =>
                   updateItem(section.title, item.name, "price", Number(e.target.value))
                 }
               />
 
-              <button
-                onClick={() => toggleItem(section.title, item.name)}
-              >
+              <button onClick={() => toggleItem(section.title, item.name)}>
                 {item.available ? "Hide" : "Show"}
               </button>
 
@@ -305,6 +289,21 @@ export default function AdminPage() {
               </button>
             </div>
           ))}
+
+          <div>
+            <input
+              placeholder="Item name"
+              onChange={(e) => setNewItemName(e.target.value)}
+            />
+
+            <input
+              placeholder="Price"
+              type="number"
+              onChange={(e) => setNewItemPrice(e.target.value)}
+            />
+
+            <button onClick={addItem}>Add item</button>
+          </div>
         </div>
       ))}
     </div>
