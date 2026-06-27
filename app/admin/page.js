@@ -186,7 +186,7 @@ export default function AdminPage() {
     await supabase.from("menu").delete().neq("id", 0);
     await supabase.from("menu").insert(dishes);
 
-    alert("Menu saved!");
+    alert("Меню обновлено!");
   };
 
   // LOGIN SCREEN
@@ -223,10 +223,10 @@ export default function AdminPage() {
       <h1>ADMIN PANEL</h1>
 
       <button onClick={uploadMenuToSupabase}>
-        Save to Supabase
+        Загрузить в Supabase
       </button>
 
-      <button onClick={logout}>Logout</button>
+      <button onClick={logout}>Выход</button>
 
       <hr />
 
@@ -281,7 +281,7 @@ export default function AdminPage() {
             />
 
             <button onClick={() => deleteCategory(section.title)}>
-              Delete Category
+              ❌
             </button>
 
             <button onClick={() => moveCategory(index, 0)}>
@@ -291,13 +291,13 @@ export default function AdminPage() {
             <button
               onClick={() => moveCategory(index, index - 1)}
             >
-              Up
+              ⬆️
             </button>
 
             <button
               onClick={() => moveCategory(index, index + 1)}
             >
-              Down
+              ⬇️
             </button>
           </div>
 
@@ -321,13 +321,13 @@ export default function AdminPage() {
               <button
                 onClick={() => toggleItem(section.title, item.name)}
               >
-                {item.available ? "Hide" : "Show"}
+                {item.available ? "🚫" : "✅"}
               </button>
 
               <button
                 onClick={() => deleteItem(section.title, item.name)}
               >
-                Delete
+                🗑️
               </button>
             </div>
           ))}
