@@ -254,4 +254,59 @@ export default function AdminPage() {
       <input
         placeholder="Name"
         value={newItemName}
-        onChange={(e) => setNewItem
+        onChange={(e) => setNewItemName(e.target.value)}
+      />
+
+      <input
+        placeholder="Price"
+        type="number"
+        value={newItemPrice}
+        onChange={(e) => setNewItemPrice(e.target.value)}
+      />
+
+      <button onClick={addItem}>Add Item</button>
+
+      <hr />
+
+      {menuData.map((section) => (
+        <div key={section.title}>
+          <input
+            value={section.title}
+            onChange={(e) =>
+              renameCategory(section.title, e.target.value)
+            }
+          />
+
+          {section.items.map((item) => (
+            <div key={item.name}>
+              <input
+                value={item.name}
+                onChange={(e) =>
+                  updateItem(section.title, item.name, "name", e.target.value)
+                }
+              />
+
+              <input
+                type="number"
+                value={item.price}
+                onChange={(e) =>
+                  updateItem(section.title, item.name, "price", Number(e.target.value))
+                }
+              />
+
+              <button
+                onClick={() => toggleItem(section.title, item.name)}
+              >
+                {item.available ? "Hide" : "Show"}
+              </button>
+
+              <button onClick={() => deleteItem(section.title, item.name)}>
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
