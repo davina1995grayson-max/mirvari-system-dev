@@ -4,47 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../supabase";
 
-import {
-  DndContext,
-  closestCenter,
-} from "@dnd-kit/core";
-
-import {
-  SortableContext,
-  useSortable,
-  arrayMove,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-
-import { CSS } from "@dnd-kit/utilities";
-
-/* -------------------- SORTABLE CARD -------------------- */
-
-function SortableCategory({ section, children }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: section.title });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} className="card">
-      <div {...attributes} {...listeners} style={{ cursor: "grab" }}>
-        <h3 style={{ color: "#f5c542" }}>📂 {section.title}</h3>
-      </div>
-
-      {children}
-    </div>
-  );
-}
-
-/* -------------------- MAIN -------------------- */
-
 export default function AdminPage() {
-  const router = useRouter();
-
   const ADMIN_PASSWORD = "edik6762";
 
   const [isAuth, setIsAuth] = useState(false);
@@ -52,16 +12,15 @@ export default function AdminPage() {
 
   const [menuData, setMenuData] = useState([]);
 
-  const [search, setSearch] = useState("");
-
   const [newCategory, setNewCategory] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
 
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
 
-  /* ---------------- AUTH ---------------- */
+  const router = useRouter();
 
+  // LOGIN CHECK
   useEffect(() => {
     const auth = localStorage.getItem("adminAuth");
     if (auth === "true") setIsAuth(true);
@@ -73,48 +32,39 @@ export default function AdminPage() {
     router.push("/");
   };
 
-  /* ---------------- LOAD ---------------- */
-
+  // LOAD MENU
   useEffect(() => {
     if (!isAuth) return;
 
-    const load = async () => {
+    const loadMenu = async () => {
       const { data } = await supabase.from("menu").select("*");
 
       const grouped = {};
 
-      data.forEach((item) => {
-        if (!grouped[item.category]) grouped[item.category] = [];
+      data?.forEach((item) => {
+        if (!grouped[item.category]) {
+          grouped[item.category] = [];
+        }
 
-        grouped[item.category].push(item);
+        grouped[item.category].push({
+          name: item.name,
+          price: item.price,
+          available: item.available,
+        });
       });
 
-      const formatted = Object.keys(grouped).map((k) => ({
-        title: k,
-        items: grouped[k],
+      const formatted = Object.keys(grouped).map((cat) => ({
+        title: cat,
+        items: grouped[cat],
       }));
 
       setMenuData(formatted);
     };
 
-    load();
+    loadMenu();
   }, [isAuth]);
 
-  /* ---------------- DRAG CATEGORIES ---------------- */
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-
-    setMenuData((items) => {
-      const oldIndex = items.findIndex((i) => i.title === active.id);
-      const newIndex = items.findIndex((i) => i.title === over.id);
-      return arrayMove(items, oldIndex, newIndex);
-    });
-  };
-
-  /* ---------------- CATEGORY ---------------- */
-
+  // CATEGORY
   const addCategory = () => {
     if (!newCategory.trim()) return;
 
@@ -130,14 +80,30 @@ export default function AdminPage() {
     setMenuData((prev) => prev.filter((c) => c.title !== title));
   };
 
-  /* ---------------- ITEMS ---------------- */
+  const renameCategory = (oldTitle, newTitle) => {
+    setMenuData((prev) =>
+      prev.map((c) =>
+        c.title === oldTitle ? { ...c, title: newTitle } : c
+      )
+    );
+  };
 
-  const addItem = (category) => {
-    if (!newItemName || !newItemPrice) return;
+  const moveCategory = (fromIndex, toIndex) => {
+    setMenuData((prev) => {
+      const copy = [...prev];
+      const item = copy.splice(fromIndex, 1)[0];
+      copy.splice(toIndex, 0, item);
+      return copy;
+    });
+  };
+
+  // ITEMS
+  const addItem = () => {
+    if (!selectedSection || !newItemName || !newItemPrice) return;
 
     setMenuData((prev) =>
       prev.map((c) =>
-        c.title === category
+        c.title === selectedSection
           ? {
               ...c,
               items: [
@@ -157,10 +123,25 @@ export default function AdminPage() {
     setNewItemPrice("");
   };
 
-  const deleteItem = (cat, name) => {
+  const updateItem = (section, oldName, field, value) => {
     setMenuData((prev) =>
       prev.map((c) =>
-        c.title === cat
+        c.title === section
+          ? {
+              ...c,
+              items: c.items.map((i) =>
+                i.name === oldName ? { ...i, [field]: value } : i
+              ),
+            }
+          : c
+      )
+    );
+  };
+
+  const deleteItem = (section, name) => {
+    setMenuData((prev) =>
+      prev.map((c) =>
+        c.title === section
           ? {
               ...c,
               items: c.items.filter((i) => i.name !== name),
@@ -170,10 +151,10 @@ export default function AdminPage() {
     );
   };
 
-  const toggleItem = (cat, name) => {
+  const toggleItem = (section, name) => {
     setMenuData((prev) =>
       prev.map((c) =>
-        c.title === cat
+        c.title === section
           ? {
               ...c,
               items: c.items.map((i) =>
@@ -187,17 +168,28 @@ export default function AdminPage() {
     );
   };
 
-  /* ---------------- SEARCH ---------------- */
+  // SAVE
+  const uploadMenuToSupabase = async () => {
+    const dishes = [];
 
-  const filtered = menuData.map((section) => ({
-    ...section,
-    items: section.items.filter((i) =>
-      i.name.toLowerCase().includes(search.toLowerCase())
-    ),
-  }));
+    menuData.forEach((section) => {
+      section.items.forEach((item) => {
+        dishes.push({
+          name: item.name,
+          price: item.price,
+          category: section.title,
+          available: item.available,
+        });
+      });
+    });
 
-  /* ---------------- LOGIN ---------------- */
+    await supabase.from("menu").delete().neq("id", 0);
+    await supabase.from("menu").insert(dishes);
 
+    alert("Menu saved!");
+  };
+
+  // LOGIN SCREEN
   if (!isAuth) {
     return (
       <div style={{ padding: 20 }}>
@@ -214,7 +206,9 @@ export default function AdminPage() {
             if (password === ADMIN_PASSWORD) {
               setIsAuth(true);
               localStorage.setItem("adminAuth", "true");
-            } else alert("Wrong password");
+            } else {
+              alert("Wrong password");
+            }
           }}
         >
           Login
@@ -223,81 +217,122 @@ export default function AdminPage() {
     );
   }
 
-  /* ---------------- UI ---------------- */
-
+  // PANEL
   return (
-    <div style={{ padding: 20, color: "white", background: "#0b0b0b", minHeight: "100vh" }}>
+    <div style={{ padding: 20 }}>
+      <h1>ADMIN PANEL</h1>
 
-      <h1>🕶️ ADMIN PANEL</h1>
+      <button onClick={uploadMenuToSupabase}>
+        Save to Supabase
+      </button>
 
       <button onClick={logout}>Logout</button>
-
-      <input
-        placeholder="Search menu..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{ marginLeft: 10 }}
-      />
 
       <hr />
 
       <h3>Add Category</h3>
-      <input value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
+      <input
+        value={newCategory}
+        onChange={(e) => setNewCategory(e.target.value)}
+      />
       <button onClick={addCategory}>Add</button>
 
       <hr />
 
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext
-          items={menuData.map((c) => c.title)}
-          strategy={verticalListSortingStrategy}
-        >
-          {filtered.map((section) => (
-            <SortableCategory key={section.title} section={section}>
+      <h3>Add Item</h3>
 
-              <button onClick={() => deleteCategory(section.title)}>
-                Delete category
+      <select
+        value={selectedSection}
+        onChange={(e) => setSelectedSection(e.target.value)}
+      >
+        <option value="">Select category</option>
+        {menuData.map((c) => (
+          <option key={c.title} value={c.title}>
+            {c.title}
+          </option>
+        ))}
+      </select>
+
+      <input
+        placeholder="Name"
+        value={newItemName}
+        onChange={(e) => setNewItemName(e.target.value)}
+      />
+
+      <input
+        placeholder="Price"
+        type="number"
+        value={newItemPrice}
+        onChange={(e) => setNewItemPrice(e.target.value)}
+      />
+
+      <button onClick={addItem}>Add Item</button>
+
+      <hr />
+
+      {menuData.map((section, index) => (
+        <div key={section.title} style={{ marginBottom: 20 }}>
+          <div style={{ display: "flex", gap: 10 }}>
+            <input
+              value={section.title}
+              onChange={(e) =>
+                renameCategory(section.title, e.target.value)
+              }
+            />
+
+            <button onClick={() => deleteCategory(section.title)}>
+              Delete Category
+            </button>
+
+            <button onClick={() => moveCategory(index, 0)}>
+              Top
+            </button>
+
+            <button
+              onClick={() => moveCategory(index, index - 1)}
+            >
+              Up
+            </button>
+
+            <button
+              onClick={() => moveCategory(index, index + 1)}
+            >
+              Down
+            </button>
+          </div>
+
+          {section.items.map((item) => (
+            <div key={item.name} style={{ display: "flex", gap: 10 }}>
+              <input
+                value={item.name}
+                onChange={(e) =>
+                  updateItem(section.title, item.name, "name", e.target.value)
+                }
+              />
+
+              <input
+                type="number"
+                value={item.price}
+                onChange={(e) =>
+                  updateItem(section.title, item.name, "price", Number(e.target.value))
+                }
+              />
+
+              <button
+                onClick={() => toggleItem(section.title, item.name)}
+              >
+                {item.available ? "Hide" : "Show"}
               </button>
 
-              <div>
-                {section.items.map((item) => (
-                  <div key={item.name} style={{ display: "flex", gap: 8 }}>
-                    <span>{item.name}</span>
-                    <span>{item.price} ₼</span>
-
-                    <button onClick={() => toggleItem(section.title, item.name)}>
-                      {item.available ? "Hide" : "Show"}
-                    </button>
-
-                    <button onClick={() => deleteItem(section.title, item.name)}>
-                      Delete
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <div>
-                <input
-                  placeholder="name"
-                  value={newItemName}
-                  onChange={(e) => setNewItemName(e.target.value)}
-                />
-
-                <input
-                  placeholder="price"
-                  value={newItemPrice}
-                  onChange={(e) => setNewItemPrice(e.target.value)}
-                />
-
-                <button onClick={() => addItem(section.title)}>
-                  Add item
-                </button>
-              </div>
-
-            </SortableCategory>
+              <button
+                onClick={() => deleteItem(section.title, item.name)}
+              >
+                Delete
+              </button>
+            </div>
           ))}
-        </SortableContext>
-      </DndContext>
+        </div>
+      ))}
     </div>
   );
 }
