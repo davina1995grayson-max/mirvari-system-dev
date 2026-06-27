@@ -21,7 +21,6 @@ const logout = () => {
   const [newItemPrice, setNewItemPrice] = useState("");
   const [newItemDescription, setNewItemDescription] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  const [activeCategory, setActiveCategory] = useState("");
   const router = useRouter();
   const addItemToCategory = (categoryTitle) => {
   if (!newItemName || !newItemPrice) return;
@@ -35,12 +34,11 @@ const logout = () => {
         items: [
           ...section.items,
           {
-  name: newItemName,
-  price: Number(newItemPrice),
-  available: true,
-  description: newItemDescription || null,
-  type: "item"        
-},
+            name: newItemName,
+            price: Number(newItemPrice),
+            available: true,
+            description: newItemDescription || null,
+          },
         ],
       };
     })
@@ -48,7 +46,6 @@ const logout = () => {
 
   setNewItemName("");
   setNewItemPrice("");
-  setActiveCategory("");
   setNewItemDescription("");
 };
   const addCategory = () => {
@@ -200,38 +197,6 @@ useEffect(() => {
     setNewItemPrice("");
   };
 
-  const itemsArray = newSetItems
-    .split("\n")
-    .filter((i) => i.trim() !== "")
-    .map((i) => ({
-      name: i.trim(),
-      price: 0,
-    }));
-
-  setMenuData((prev) =>
-    prev.map((section) =>
-      section.title === selectedSection
-        ? {
-            ...section,
-            items: [
-              ...section.items,
-              {
-                name: newItemName,
-                price: Number(newItemPrice),
-                available: true,
-                type: "set",
-                items: itemsArray,
-              },
-            ],
-          }
-        : section
-    )
-  );
-
-  setNewItemName("");
-  setNewItemPrice("");
-  setNewSetItems("");
-};
   const uploadMenuToSupabase = async () => {
   const dishes = [];
 
