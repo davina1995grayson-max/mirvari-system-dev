@@ -11,17 +11,18 @@ export default function AdminPage() {
   const [isAuth, setIsAuth] = useState(false);
   const [password, setPassword] = useState("");
 
+  const [newCategory, setNewCategory] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
+
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
-  const [newCategory, setNewCategory] = useState("");
 
   const router = useRouter();
 
   // LOGIN CHECK
   useEffect(() => {
-    const saved = localStorage.getItem("adminAuth");
-    if (saved === "true") setIsAuth(true);
+    const auth = localStorage.getItem("adminAuth");
+    if (auth === "true") setIsAuth(true);
   }, []);
 
   const logout = () => {
@@ -32,13 +33,22 @@ export default function AdminPage() {
 
   // LOAD MENU
   useEffect(() => {
+    if (!isAuth) return;
+
     const loadMenu = async () => {
-      const { data } = await supabase.from("menu").select("*");
+      const { data, error } = await supabase.from("menu").select("*");
+
+      if (error) {
+        console.log(error);
+        return;
+      }
 
       const grouped = {};
 
-      data?.forEach((item) => {
-        if (!grouped[item.category]) grouped[item.category] = [];
+      data.forEach((item) => {
+        if (!grouped[item.category]) {
+          grouped[item.category] = [];
+        }
 
         grouped[item.category].push({
           name: item.name,
@@ -47,16 +57,16 @@ export default function AdminPage() {
         });
       });
 
-      const formatted = Object.keys(grouped).map((key) => ({
-        title: key,
-        items: grouped[key],
+      const formatted = Object.keys(grouped).map((cat) => ({
+        title: cat,
+        items: grouped[cat],
       }));
 
       setMenuData(formatted);
     };
 
     loadMenu();
-  }, []);
+  }, [isAuth]);
 
   // CATEGORY
   const addCategory = () => {
@@ -78,13 +88,13 @@ export default function AdminPage() {
     );
   };
 
-  // ITEM
-  const addItem = (category) => {
-    if (!newItemName || !newItemPrice) return;
+  // ITEMS
+  const addItem = () => {
+    if (!selectedSection || !newItemName || !newItemPrice) return;
 
     setMenuData((prev) =>
       prev.map((s) =>
-        s.title === category
+        s.title === selectedSection
           ? {
               ...s,
               items: [
@@ -104,29 +114,16 @@ export default function AdminPage() {
     setNewItemPrice("");
   };
 
-  const updateName = (section, oldName, newName) => {
+  const updateItem = (section, oldName, field, value) => {
     setMenuData((prev) =>
       prev.map((s) =>
         s.title === section
           ? {
               ...s,
               items: s.items.map((i) =>
-                i.name === oldName ? { ...i, name: newName } : i
-              ),
-            }
-          : s
-      )
-    );
-  };
-
-  const updatePrice = (section, name, price) => {
-    setMenuData((prev) =>
-      prev.map((s) =>
-        s.title === section
-          ? {
-              ...s,
-              items: s.items.map((i) =>
-                i.name === name ? { ...i, price: Number(price) } : i
+                i.name === oldName
+                  ? { ...i, [field]: value }
+                  : i
               ),
             }
           : s
@@ -180,9 +177,13 @@ export default function AdminPage() {
     });
 
     await supabase.from("menu").delete().neq("id", 0);
-    await supabase.from("menu").insert(dishes);
+    const { error } = await supabase.from("menu").insert(dishes);
 
-    alert("Меню обновлено!");
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Menu updated!");
+    }
   };
 
   // LOGIN SCREEN
@@ -195,6 +196,7 @@ export default function AdminPage() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
         />
 
         <button
@@ -243,73 +245,13 @@ export default function AdminPage() {
       >
         <option value="">Select category</option>
         {menuData.map((s) => (
-          <option key={s.title}>{s.title}</option>
+          <option key={s.title} value={s.title}>
+            {s.title}
+          </option>
         ))}
       </select>
 
       <input
         placeholder="Name"
         value={newItemName}
-        onChange={(e) => setNewItemName(e.target.value)}
-      />
-
-      <input
-        placeholder="Price"
-        type="number"
-        value={newItemPrice}
-        onChange={(e) => setNewItemPrice(e.target.value)}
-      />
-
-      <button onClick={() => addItem(selectedSection)}>
-        Add Item
-      </button>
-
-      <hr />
-
-      {menuData.map((section) => (
-        <div key={section.title}>
-          <input
-            value={section.title}
-            onChange={(e) =>
-              renameCategory(section.title, e.target.value)
-            }
-          />
-
-          {section.items.map((item) => (
-            <div key={item.name}>
-              <input
-                value={item.name}
-                onChange={(e) =>
-                  updateName(section.title, item.name, e.target.value)
-                }
-              />
-
-              <input
-                type="number"
-                value={item.price}
-                onChange={(e) =>
-                  updatePrice(section.title, item.name, e.target.value)
-                }
-              />
-
-              <button
-                onClick={() =>
-                  toggleItem(section.title, item.name)
-                }
-              >
-                {item.available ? "Hide" : "Show"}
-              </button>
-
-              <button
-                onClick={() =>
-                  deleteItem(section.title, item.name)
-                }
-              >
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
+        onChange={(e) => setNewItem
