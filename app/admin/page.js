@@ -22,7 +22,6 @@ const logout = () => {
   const [newItemDescription, setNewItemDescription] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
-  const [newSetItems, setNewSetItems] = useState("");
   const router = useRouter();
   const addItemToCategory = (categoryTitle) => {
   if (!newItemName || !newItemPrice) return;
@@ -200,8 +199,6 @@ useEffect(() => {
     setNewItemName("");
     setNewItemPrice("");
   };
-const addSet = () => {
-  if (!selectedSection || !newItemName || !newItemPrice) return;
 
   const itemsArray = newSetItems
     .split("\n")
@@ -409,36 +406,6 @@ if (!isAuth) {
           value={newItemPrice}
           onChange={(e) => setNewItemPrice(e.target.value)}
         />
-
-            <textarea
-  placeholder="Состав сета (каждое блюдо с новой строки)"
-  value={newSetItems}
-  onChange={(e) => setNewSetItems(e.target.value)}
-  style={{
-    width: "100%",
-    height: 80,
-    marginTop: 8,
-    padding: 8,
-  }}
-/>
-
-        <button onClick={addItem}>Add</button>
-<button
-  onClick={addSet}
-  style={{
-    marginLeft: 10,
-    background: "#f5c542",
-    border: "none",
-    padding: "8px 12px",
-    borderRadius: 8,
-    fontWeight: "bold",
-    cursor: "pointer",
-  }}
->
-  🎁 Add Set
-</button>
-    </div>
-
       <hr />
 
       {/* MENU LIST */}
