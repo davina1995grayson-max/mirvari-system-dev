@@ -158,3 +158,103 @@ return (
     </div>
   </div>
 );
+const styles = {
+  page: {
+    background: "#0f0f0f",
+    minHeight: "100vh",
+    color: "white",
+    padding: 20,
+    fontFamily: "Arial",
+  },
+
+  logo: {
+    color: "#f5c542",
+    fontSize: 28,
+    marginBottom: 10,
+  },
+
+  table: {
+    marginBottom: 10,
+    opacity: 0.8,
+  },
+
+  search: {
+    width: "100%",
+    padding: 12,
+    borderRadius: 10,
+    border: "none",
+    marginBottom: 20,
+  },
+
+  section: {
+    marginBottom: 25,
+  },
+
+  sectionTitle: {
+    color: "#f5c542",
+    marginBottom: 10,
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: 10,
+  },
+
+  card: {
+    background: "#1b1b1b",
+    padding: 12,
+    borderRadius: 14,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  itemName: {
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+
+  price: {
+    fontSize: 12,
+    opacity: 0.7,
+  },
+
+  addBtn: {
+    background: "#f5c542",
+    border: "none",
+    borderRadius: 10,
+    padding: "6px 10px",
+    fontWeight: "bold",
+    cursor: "pointer",
+  },
+
+  cart: {
+    marginTop: 30,
+    padding: 15,
+    background: "#1a1a1a",
+    borderRadius: 12,
+  },
+
+  cartItem: {
+    fontSize: 13,
+    marginBottom: 5,
+  },
+
+  total: {
+    marginTop: 10,
+    fontWeight: "bold",
+    color: "#f5c542",
+  },
+
+  orderBtn: {
+    marginTop: 10,
+    width: "100%",
+    padding: 12,
+    borderRadius: 10,
+    border: "none",
+    background: "#f5c542",
+    fontWeight: "bold",
+    cursor: "pointer",
+  },
+};
