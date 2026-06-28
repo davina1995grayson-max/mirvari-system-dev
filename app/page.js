@@ -9,6 +9,7 @@ export default function Page() {
   const [table, setTable] = useState(null);
   const [search, setSearch] = useState("");
 
+  // LOAD MENU
   useEffect(() => {
     const loadMenu = async () => {
       const { data } = await supabase.from("menu").select("*");
@@ -19,7 +20,6 @@ export default function Page() {
         if (!grouped[item.category]) {
           grouped[item.category] = [];
         }
-
         grouped[item.category].push(item);
       });
 
@@ -34,6 +34,7 @@ export default function Page() {
     loadMenu();
   }, []);
 
+  // ADD TO CART
   const addToCart = (item) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.name === item.name);
@@ -50,11 +51,13 @@ export default function Page() {
     });
   };
 
+  // TOTAL
   const total = cart.reduce(
     (sum, item) => sum + item.price * (item.qty || 1),
     0
   );
 
+  // ORDER
   const order = () => {
     const text =
       "🍽️ NEW ORDER\n" +
@@ -72,84 +75,91 @@ export default function Page() {
     );
   };
 
+  // TABLE SELECT
   if (table === null) {
     return (
       <div style={styles.page}>
-        <h2>Выбери стол</h2>
+        <h2 style={styles.logo}>🍽️ MIRVARI RESTAURANT</h2>
 
-        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-          <button
-            key={num}
-            style={styles.tableBtn}
-            onClick={() => setTable(num)}
-          >
-            🪑 {num}
-          </button>
-        ))}
+        <p>Выбери стол</p>
+
+        <div style={styles.tableGrid}>
+          {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+            <button
+              key={num}
+              style={styles.tableBtn}
+              onClick={() => setTable(num)}
+            >
+              🪑 {num}
+            </button>
+          ))}
+        </div>
       </div>
     );
   }
 
-return (
-  <div style={styles.page}>
+  // MAIN UI
+  return (
+    <div style={styles.page}>
+      {/* HEADER */}
+      <div style={styles.header}>
+        <h1 style={styles.logo}>🍽️ MIRVARI</h1>
+        <div style={styles.table}>🪑 {table}</div>
+      </div>
 
-    {/* HEADER */}
-    <div style={styles.header}>
-      <h1 style={styles.logo}>🍽️ MIRVARI</h1>
-      <div style={styles.table}>🪑 {table}</div>
-    </div>
+      {/* SEARCH */}
+      <input
+        style={styles.search}
+        placeholder="Search dishes..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
-    {/* SEARCH */}
-    <input
-      style={styles.search}
-      placeholder="Search dishes..."
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-    />
+      {/* MENU */}
+      {menuData.map((section) => (
+        <div key={section.title} style={styles.section}>
+          <h2 style={styles.sectionTitle}>{section.title}</h2>
 
-    {/* MENU */}
-    {menuData.map((section) => (
-      <div key={section.title} style={styles.section}>
-        <h2 style={styles.sectionTitle}>{section.title}</h2>
+          <div style={styles.grid}>
+            {section.items
+              .filter((item) =>
+                item.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((item) => (
+                <div key={item.name} style={styles.card}>
+                  <div>
+                    <div style={styles.itemName}>{item.name}</div>
+                    <div style={styles.price}>{item.price} AZN</div>
+                  </div>
 
-        <div style={styles.grid}>
-          {section.items
-            .filter((item) =>
-              item.name.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((item) => (
-              <div key={item.name} style={styles.card}>
-                <div>
-                  <div style={styles.itemName}>{item.name}</div>
-                  <div style={styles.price}>{item.price} AZN</div>
+                  <button
+                    style={styles.addBtn}
+                    onClick={() => addToCart(item)}
+                  >
+                    +
+                  </button>
                 </div>
-
-                <button
-                  style={styles.addBtn}
-                  onClick={() => addToCart(item)}
-                >
-                  +
-                </button>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
-      </div>
-    ))}
+      ))}
 
-    {/* CART BAR (как Wolt) */}
-    {cart.length > 0 && (
-      <div style={styles.cartBar}>
-        <span>🛒 {cart.length} items</span>
-        <span>{total} AZN</span>
+      {/* CART BAR */}
+      {cart.length > 0 && (
+        <div style={styles.cartBar}>
+          <span>🛒 {cart.length} items</span>
+          <span>{total} AZN</span>
 
-        <button style={styles.orderBtn} onClick={order}>
-          Order
-        </button>
-      </div>
-    )}
+          <button style={styles.orderBtn} onClick={order}>
+            Order
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
-  </div>
-);
+/* ================= STYLES ================= */
 
 const styles = {
   page: {
@@ -168,12 +178,12 @@ const styles = {
 
   logo: {
     color: "#f5c542",
-    fontSize: 26,
+    fontSize: 24,
+    fontWeight: "bold",
   },
 
   table: {
-    opacity: 0.8,
-    fontSize: 14,
+    opacity: 0.7,
   },
 
   search: {
@@ -185,9 +195,12 @@ const styles = {
     marginBottom: 20,
   },
 
+  section: {
+    marginBottom: 25,
+  },
+
   sectionTitle: {
     color: "#f5c542",
-    marginTop: 20,
     marginBottom: 10,
   },
 
@@ -207,14 +220,12 @@ const styles = {
   },
 
   itemName: {
-    fontSize: 15,
     fontWeight: "bold",
   },
 
   price: {
-    fontSize: 13,
     opacity: 0.7,
-    marginTop: 2,
+    fontSize: 13,
   },
 
   addBtn: {
@@ -246,5 +257,20 @@ const styles = {
     borderRadius: 10,
     fontWeight: "bold",
   },
+
+  tableGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(4, 1fr)",
+    gap: 10,
+    marginTop: 20,
+  },
+
+  tableBtn: {
+    padding: 15,
+    borderRadius: 12,
+    border: "none",
+    background: "#f5c542",
+    fontWeight: "bold",
+    cursor: "pointer",
+  },
 };
-}
