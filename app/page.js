@@ -256,6 +256,7 @@ const styles = {
     background: "#f5c542",
     fontWeight: "bold",
     cursor: "pointer",
-  },
-};
-      }
+   },
+  };
+ };
+}
