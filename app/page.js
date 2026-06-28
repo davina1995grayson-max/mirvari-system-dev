@@ -99,53 +99,62 @@ export default function Page() {
   }
 
   // MAIN UI
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>MENU</h1>
+return (
+  <div style={styles.page}>
+    <h1 style={styles.logo}>🍽️ MIRVARI</h1>
 
-      <p>Table: {table}</p>
+    <div style={styles.table}>🪑 Table: {table}</div>
 
-      <input
-        placeholder="Search..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+    <input
+      style={styles.search}
+      placeholder="Search dishes..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
 
-      {menuData.map((section) => (
-        <div key={section.title}>
-          <h3>{section.title}</h3>
+    {menuData.map((section) => (
+      <div key={section.title} style={styles.section}>
+        <h2 style={styles.sectionTitle}>{section.title}</h2>
 
+        <div style={styles.grid}>
           {section.items
             .filter((item) =>
               item.name.toLowerCase().includes(search.toLowerCase())
             )
             .map((item) => (
-              <div key={item.name}>
-                <span>
-                  {item.name} — {item.price} AZN
-                </span>
+              <div key={item.name} style={styles.card}>
+                <div>
+                  <div style={styles.itemName}>{item.name}</div>
+                  <div style={styles.price}>{item.price} AZN</div>
+                </div>
 
-                <button onClick={() => addToCart(item)}>
-                  Add
+                <button
+                  style={styles.addBtn}
+                  onClick={() => addToCart(item)}
+                >
+                  +
                 </button>
               </div>
             ))}
         </div>
-      ))}
+      </div>
+    ))}
 
-      <hr />
-
-      <h3>Cart</h3>
+    {/* CART */}
+    <div style={styles.cart}>
+      <h3>🛒 Cart</h3>
 
       {cart.map((item) => (
-        <div key={item.name}>
+        <div key={item.name} style={styles.cartItem}>
           {item.name} x{item.qty || 1}
         </div>
       ))}
 
-      <h3>Total: {total} AZN</h3>
+      <div style={styles.total}>Total: {total} AZN</div>
 
-      <button onClick={order}>Order</button>
+      <button style={styles.orderBtn} onClick={order}>
+        Order Now
+      </button>
     </div>
-  );
-}
+  </div>
+);
