@@ -90,23 +90,29 @@ export default function Page() {
     );
   }
 
-  return (
-    <div style={styles.page}>
+return (
+  <div style={styles.page}>
+
+    {/* HEADER */}
+    <div style={styles.header}>
       <h1 style={styles.logo}>🍽️ MIRVARI</h1>
+      <div style={styles.table}>🪑 {table}</div>
+    </div>
 
-      <div>🪑 Table: {table}</div>
+    {/* SEARCH */}
+    <input
+      style={styles.search}
+      placeholder="Search dishes..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
 
-      <input
-        style={styles.search}
-        placeholder="Search..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+    {/* MENU */}
+    {menuData.map((section) => (
+      <div key={section.title} style={styles.section}>
+        <h2 style={styles.sectionTitle}>{section.title}</h2>
 
-      {menuData.map((section) => (
-        <div key={section.title}>
-          <h3 style={styles.sectionTitle}>{section.title}</h3>
-
+        <div style={styles.grid}>
           {section.items
             .filter((item) =>
               item.name.toLowerCase().includes(search.toLowerCase())
@@ -114,85 +120,130 @@ export default function Page() {
             .map((item) => (
               <div key={item.name} style={styles.card}>
                 <div>
-                  <b>{item.name}</b>
-                  <div>{item.price} AZN</div>
+                  <div style={styles.itemName}>{item.name}</div>
+                  <div style={styles.price}>{item.price} AZN</div>
                 </div>
 
-                <button onClick={() => addToCart(item)}>+</button>
+                <button
+                  style={styles.addBtn}
+                  onClick={() => addToCart(item)}
+                >
+                  +
+                </button>
               </div>
             ))}
         </div>
-      ))}
+      </div>
+    ))}
 
-      <div style={styles.cart}>
-        <h3>Cart</h3>
+    {/* CART BAR (как Wolt) */}
+    {cart.length > 0 && (
+      <div style={styles.cartBar}>
+        <span>🛒 {cart.length} items</span>
+        <span>{total} AZN</span>
 
-        {cart.map((i) => (
-          <div key={i.name}>
-            {i.name} x{i.qty || 1}
-          </div>
-        ))}
-
-        <h3>Total: {total} AZN</h3>
-
-        <button onClick={order} style={styles.orderBtn}>
+        <button style={styles.orderBtn} onClick={order}>
           Order
         </button>
       </div>
-    </div>
-  );
-}
+    )}
+
+  </div>
+);
 
 const styles = {
   page: {
-    background: "#0f0f0f",
+    background: "#0b0b0b",
     minHeight: "100vh",
     color: "white",
-    padding: 20,
+    padding: 16,
+    fontFamily: "Arial",
+  },
+
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   logo: {
     color: "#f5c542",
-    fontSize: 28,
+    fontSize: 26,
+  },
+
+  table: {
+    opacity: 0.8,
+    fontSize: 14,
   },
 
   search: {
     width: "100%",
-    padding: 10,
-    margin: "10px 0",
+    padding: 12,
+    borderRadius: 12,
+    border: "none",
+    marginTop: 10,
+    marginBottom: 20,
   },
 
   sectionTitle: {
     color: "#f5c542",
+    marginTop: 20,
+    marginBottom: 10,
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: 10,
   },
 
   card: {
+    background: "#1a1a1a",
+    padding: 14,
+    borderRadius: 14,
     display: "flex",
     justifyContent: "space-between",
-    background: "#1b1b1b",
-    padding: 10,
-    marginTop: 8,
-    borderRadius: 10,
+    alignItems: "center",
   },
 
-  cart: {
-    marginTop: 20,
-    padding: 10,
-    background: "#1a1a1a",
-    borderRadius: 10,
-  },
-
-  orderBtn: {
-    width: "100%",
-    padding: 12,
-    background: "#f5c542",
-    border: "none",
-    marginTop: 10,
+  itemName: {
+    fontSize: 15,
     fontWeight: "bold",
   },
 
-  tableBtn: {
-    margin: 5,
-    padding: 10,
+  price: {
+    fontSize: 13,
+    opacity: 0.7,
+    marginTop: 2,
+  },
+
+  addBtn: {
+    background: "#f5c542",
+    border: "none",
+    borderRadius: 10,
+    padding: "6px 12px",
+    fontWeight: "bold",
+    cursor: "pointer",
+  },
+
+  cartBar: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    background: "#141414",
+    padding: 14,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderTop: "1px solid #333",
+  },
+
+  orderBtn: {
+    background: "#f5c542",
+    border: "none",
+    padding: "10px 14px",
+    borderRadius: 10,
+    fontWeight: "bold",
   },
 };
