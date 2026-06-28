@@ -215,7 +215,6 @@ export default function Page() {
   const [table, setTable] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [dark, setDark] = useState(true);
-  const [search, setSearch] = useState("");
   const [lang, setLang] = useState("AZ"); 
   const [logoClicks, setLogoClicks] = useState(0);
   const [newItemName, setNewItemName] = useState("");
@@ -301,17 +300,14 @@ console.log("DATA FROM SUPABASE:", data); // 👈 ВОТ СЮДА
   const translations = {
 AZ: {
 title: "MIRVARI RESTORAN",
-search: "Yemək axtar...",
 order: "Sifariş",
 },
 RU: {
 title: "РЕСТОРАН MIRVARI",
-search: "Поиск блюда...",
 order: "Заказ",
 },
 EN: {
 title: "MIRVARI RESTAURANT",
-search: "Search food...",
 order: "Order",
 },
 };
@@ -625,13 +621,6 @@ const addToCart = (item, e) => {
   💳 Hesab
 </button>
 </div>
-    
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder={t.search}
-        style={{ width: "100%", padding: 12, marginTop: 10 }}
-      />
 
       {isAdmin && (
   <div
