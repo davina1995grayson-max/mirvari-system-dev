@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 
 export default function Page() {
@@ -10,10 +9,6 @@ export default function Page() {
   const [table, setTable] = useState(null);
   const [search, setSearch] = useState("");
 
-  const cartRef = useRef(null);
-  const router = useRouter();
-
-  // LOAD MENU FROM SUPABASE
   useEffect(() => {
     const loadMenu = async () => {
       const { data } = await supabase.from("menu").select("*");
@@ -25,25 +20,20 @@ export default function Page() {
           grouped[item.category] = [];
         }
 
-        grouped[item.category].push({
-          name: item.name,
-          price: item.price,
-          available: item.available,
-        });
+        grouped[item.category].push(item);
       });
 
-      const formatted = Object.keys(grouped).map((cat) => ({
-        title: cat,
-        items: grouped[cat],
-      }));
-
-      setMenuData(formatted);
+      setMenuData(
+        Object.keys(grouped).map((cat) => ({
+          title: cat,
+          items: grouped[cat],
+        }))
+      );
     };
 
     loadMenu();
   }, []);
 
-  // ADD TO CART
   const addToCart = (item) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.name === item.name);
@@ -60,37 +50,39 @@ export default function Page() {
     });
   };
 
-  // TOTAL
   const total = cart.reduce(
     (sum, item) => sum + item.price * (item.qty || 1),
     0
   );
 
-  // ORDER
   const order = () => {
     const text =
       "🍽️ NEW ORDER\n" +
       `🪑 Table: ${table}\n\n` +
       cart
         .map(
-          (i) => `• ${i.name} x${i.qty || 1} = ${i.price * (i.qty || 1)}`
+          (i) =>
+            `• ${i.name} x${i.qty || 1} = ${i.price * (i.qty || 1)} AZN`
         )
         .join("\n") +
-      `\n\n💰 TOTAL: ${total}`;
+      `\n\n💰 TOTAL: ${total} AZN`;
 
     window.open(
       `https://wa.me/994553976762?text=${encodeURIComponent(text)}`
     );
   };
 
-  // TABLE SELECT
   if (table === null) {
     return (
-      <div style={{ padding: 20 }}>
+      <div style={styles.page}>
         <h2>Выбери стол</h2>
 
         {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-          <button key={num} onClick={() => setTable(num)}>
+          <button
+            key={num}
+            style={styles.tableBtn}
+            onClick={() => setTable(num)}
+          >
             🪑 {num}
           </button>
         ))}
@@ -98,25 +90,23 @@ export default function Page() {
     );
   }
 
-  // MAIN UI
-return (
-  <div style={styles.page}>
-    <h1 style={styles.logo}>🍽️ MIRVARI</h1>
+  return (
+    <div style={styles.page}>
+      <h1 style={styles.logo}>🍽️ MIRVARI</h1>
 
-    <div style={styles.table}>🪑 Table: {table}</div>
+      <div>🪑 Table: {table}</div>
 
-    <input
-      style={styles.search}
-      placeholder="Search dishes..."
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-    />
+      <input
+        style={styles.search}
+        placeholder="Search..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
-    {menuData.map((section) => (
-      <div key={section.title} style={styles.section}>
-        <h2 style={styles.sectionTitle}>{section.title}</h2>
+      {menuData.map((section) => (
+        <div key={section.title}>
+          <h3 style={styles.sectionTitle}>{section.title}</h3>
 
-        <div style={styles.grid}>
           {section.items
             .filter((item) =>
               item.name.toLowerCase().includes(search.toLowerCase())
@@ -124,139 +114,85 @@ return (
             .map((item) => (
               <div key={item.name} style={styles.card}>
                 <div>
-                  <div style={styles.itemName}>{item.name}</div>
-                  <div style={styles.price}>{item.price} AZN</div>
+                  <b>{item.name}</b>
+                  <div>{item.price} AZN</div>
                 </div>
 
-                <button
-                  style={styles.addBtn}
-                  onClick={() => addToCart(item)}
-                >
-                  +
-                </button>
+                <button onClick={() => addToCart(item)}>+</button>
               </div>
             ))}
         </div>
-      </div>
-    ))}
-
-    {/* CART */}
-    <div style={styles.cart}>
-      <h3>🛒 Cart</h3>
-
-      {cart.map((item) => (
-        <div key={item.name} style={styles.cartItem}>
-          {item.name} x{item.qty || 1}
-        </div>
       ))}
 
-      <div style={styles.total}>Total: {total} AZN</div>
+      <div style={styles.cart}>
+        <h3>Cart</h3>
 
-      <button style={styles.orderBtn} onClick={order}>
-        Order Now
-      </button>
+        {cart.map((i) => (
+          <div key={i.name}>
+            {i.name} x{i.qty || 1}
+          </div>
+        ))}
+
+        <h3>Total: {total} AZN</h3>
+
+        <button onClick={order} style={styles.orderBtn}>
+          Order
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+}
+
 const styles = {
   page: {
     background: "#0f0f0f",
     minHeight: "100vh",
     color: "white",
     padding: 20,
-    fontFamily: "Arial",
   },
 
   logo: {
     color: "#f5c542",
     fontSize: 28,
-    marginBottom: 10,
-  },
-
-  table: {
-    marginBottom: 10,
-    opacity: 0.8,
   },
 
   search: {
     width: "100%",
-    padding: 12,
-    borderRadius: 10,
-    border: "none",
-    marginBottom: 20,
-  },
-
-  section: {
-    marginBottom: 25,
+    padding: 10,
+    margin: "10px 0",
   },
 
   sectionTitle: {
     color: "#f5c542",
-    marginBottom: 10,
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: 10,
   },
 
   card: {
-    background: "#1b1b1b",
-    padding: 12,
-    borderRadius: 14,
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
-  },
-
-  itemName: {
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-
-  price: {
-    fontSize: 12,
-    opacity: 0.7,
-  },
-
-  addBtn: {
-    background: "#f5c542",
-    border: "none",
+    background: "#1b1b1b",
+    padding: 10,
+    marginTop: 8,
     borderRadius: 10,
-    padding: "6px 10px",
-    fontWeight: "bold",
-    cursor: "pointer",
   },
 
   cart: {
-    marginTop: 30,
-    padding: 15,
+    marginTop: 20,
+    padding: 10,
     background: "#1a1a1a",
-    borderRadius: 12,
-  },
-
-  cartItem: {
-    fontSize: 13,
-    marginBottom: 5,
-  },
-
-  total: {
-    marginTop: 10,
-    fontWeight: "bold",
-    color: "#f5c542",
+    borderRadius: 10,
   },
 
   orderBtn: {
-    marginTop: 10,
     width: "100%",
     padding: 12,
-    borderRadius: 10,
-    border: "none",
     background: "#f5c542",
+    border: "none",
+    marginTop: 10,
     fontWeight: "bold",
-    cursor: "pointer",
-   },
-  };
- };
-}
+  },
+
+  tableBtn: {
+    margin: 5,
+    padding: 10,
+  },
+};
