@@ -247,3 +247,4 @@ const styles = {
     fontWeight: "bold",
   },
 };
+}
