@@ -9,6 +9,7 @@ export default function Page() {
   const [table, setTable] = useState(null);
   const [search, setSearch] = useState("");
 
+  // LOAD MENU
   useEffect(() => {
     const loadMenu = async () => {
       const { data } = await supabase.from("menu").select("*");
@@ -16,7 +17,10 @@ export default function Page() {
       const grouped = {};
 
       data?.forEach((item) => {
-        if (!grouped[item.category]) grouped[item.category] = [];
+        if (!grouped[item.category]) {
+          grouped[item.category] = [];
+        }
+
         grouped[item.category].push(item);
       });
 
@@ -31,6 +35,7 @@ export default function Page() {
     loadMenu();
   }, []);
 
+  // ADD TO CART
   const addToCart = (item) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.name === item.name);
@@ -47,11 +52,13 @@ export default function Page() {
     });
   };
 
+  // TOTAL
   const total = cart.reduce(
     (sum, item) => sum + item.price * (item.qty || 1),
     0
   );
 
+  // ORDER
   const order = () => {
     const text =
       "🍽️ NEW ORDER\n" +
@@ -69,17 +76,17 @@ export default function Page() {
     );
   };
 
-  // STEP 1: TABLE SELECT
+  // TABLE SELECT SCREEN
   if (table === null) {
     return (
-      <div style={styles.page}>
+      <div style={{ padding: 20 }}>
         <h2>Выбери стол</h2>
 
         {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
           <button
             key={num}
             onClick={() => setTable(num)}
-            style={styles.tableBtn}
+            style={{ margin: 5, padding: 10 }}
           >
             🪑 {num}
           </button>
@@ -90,13 +97,12 @@ export default function Page() {
 
   // MAIN UI
   return (
-    <div style={styles.page}>
-      <h1 style={styles.logo}>🍽️ MIRVARI</h1>
+    <div style={{ padding: 20 }}>
+      <h1>MENU</h1>
 
-      <div>🪑 Table: {table}</div>
+      <p>Table: {table}</p>
 
       <input
-        style={styles.search}
         placeholder="Search..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -104,84 +110,39 @@ export default function Page() {
 
       {menuData.map((section) => (
         <div key={section.title}>
-          <h2 style={styles.sectionTitle}>{section.title}</h2>
+          <h3>{section.title}</h3>
 
           {section.items
             .filter((item) =>
               item.name.toLowerCase().includes(search.toLowerCase())
             )
             .map((item) => (
-              <div key={item.name} style={styles.card}>
-                <div>
-                  <div>{item.name}</div>
-                  <div>{item.price} AZN</div>
-                </div>
+              <div key={item.name}>
+                <span>
+                  {item.name} — {item.price} AZN
+                </span>
 
-                <button onClick={() => addToCart(item)}>+</button>
+                <button onClick={() => addToCart(item)}>
+                  Add
+                </button>
               </div>
             ))}
         </div>
       ))}
 
-      {cart.length > 0 && (
-        <div style={styles.cart}>
-          <div>🛒 {cart.length} items</div>
-          <div>{total} AZN</div>
+      <hr />
 
-          <button onClick={order}>ORDER</button>
+      <h3>Cart</h3>
+
+      {cart.map((item) => (
+        <div key={item.name}>
+          {item.name} x{item.qty || 1}
         </div>
-      )}
+      ))}
+
+      <h3>Total: {total} AZN</h3>
+
+      <button onClick={order}>Order</button>
     </div>
   );
 }
-
-const styles = {
-  page: {
-    background: "#0b0b0b",
-    minHeight: "100vh",
-    color: "white",
-    padding: 16,
-    fontFamily: "Arial",
-  },
-
-  logo: {
-    color: "#f5c542",
-    marginBottom: 10,
-  },
-
-  search: {
-    width: "100%",
-    padding: 10,
-    marginBottom: 10,
-  },
-
-  sectionTitle: {
-    color: "#f5c542",
-    marginTop: 15,
-  },
-
-  card: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: 10,
-    background: "#1a1a1a",
-    marginBottom: 8,
-    borderRadius: 10,
-  },
-
-  cart: {
-    position: "fixed",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    background: "#111",
-    padding: 12,
-    display: "flex",
-    justifyContent: "space-between",
-  },
-
-  tableBtn: {
-    margin: 5,
-    padding: 10,
-  },
-};
