@@ -9,7 +9,6 @@ export default function Page() {
   const [table, setTable] = useState(null);
   const [search, setSearch] = useState("");
 
-  // LOAD MENU
   useEffect(() => {
     const loadMenu = async () => {
       const { data } = await supabase.from("menu").select("*");
@@ -23,18 +22,17 @@ export default function Page() {
         grouped[item.category].push(item);
       });
 
-      const formatted = Object.keys(grouped).map((cat) => ({
-        title: cat,
-        items: grouped[cat],
-      }));
-
-      setMenuData(formatted);
+      setMenuData(
+        Object.keys(grouped).map((cat) => ({
+          title: cat,
+          items: grouped[cat],
+        }))
+      );
     };
 
     loadMenu();
   }, []);
 
-  // ADD TO CART
   const addToCart = (item) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.name === item.name);
@@ -51,13 +49,11 @@ export default function Page() {
     });
   };
 
-  // TOTAL
   const total = cart.reduce(
     (sum, item) => sum + item.price * (item.qty || 1),
     0
   );
 
-  // ORDER
   const order = () => {
     const text =
       "🍽️ NEW ORDER\n" +
@@ -75,45 +71,33 @@ export default function Page() {
     );
   };
 
-  // TABLE SELECT
+  // STEP 1: choose table
   if (table === null) {
     return (
       <div style={styles.page}>
-        <h2 style={styles.logo}>🍽️ MIRVARI</h2>
-        <p>Выбери стол</p>
+        <h2>Выбери стол</h2>
 
-        <div style={styles.tableGrid}>
-          {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-            <button
-              key={num}
-              style={styles.tableBtn}
-              onClick={() => setTable(num)}
-            >
-              🪑 {num}
-            </button>
-          ))}
-        </div>
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <button
+            key={num}
+            style={styles.tableBtn}
+            onClick={() => setTable(num)}
+          >
+            🪑 {num}
+          </button>
+        ))}
       </div>
     );
   }
 
   // MAIN UI
-  const filteredMenu = menuData.map((section) => ({
-    ...section,
-    items: section.items.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
-    ),
-  }));
-
   return (
     <div style={styles.page}>
-      {/* HEADER */}
       <div style={styles.header}>
         <h1 style={styles.logo}>🍽️ MIRVARI</h1>
-        <div style={styles.table}>🪑 {table}</div>
+        <div>🪑 {table}</div>
       </div>
 
-      {/* SEARCH */}
       <input
         style={styles.search}
         placeholder="Search..."
@@ -121,47 +105,38 @@ export default function Page() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* MENU */}
-      {filteredMenu.map((section) => (
-        <div key={section.title} style={styles.section}>
+      {menuData.map((section) => (
+        <div key={section.title}>
           <h2 style={styles.sectionTitle}>{section.title}</h2>
 
-          <div style={styles.grid}>
-            {section.items.map((item) => (
+          {section.items
+            .filter((item) =>
+              item.name.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((item) => (
               <div key={item.name} style={styles.card}>
                 <div>
-                  <div style={styles.itemName}>{item.name}</div>
-                  <div style={styles.price}>{item.price} AZN</div>
+                  <div>{item.name}</div>
+                  <div>{item.price} AZN</div>
                 </div>
 
-                <button
-                  style={styles.addBtn}
-                  onClick={() => addToCart(item)}
-                >
-                  +
-                </button>
+                <button onClick={() => addToCart(item)}>+</button>
               </div>
             ))}
-          </div>
         </div>
       ))}
 
-      {/* CART BAR */}
       {cart.length > 0 && (
-        <div style={styles.cartBar}>
-          <span>🛒 {cart.length}</span>
-          <span>{total} AZN</span>
+        <div style={styles.cart}>
+          <div>🛒 {cart.length} items</div>
+          <div>{total} AZN</div>
 
-          <button style={styles.orderBtn} onClick={order}>
-            Order
-          </button>
+          <button onClick={order}>ORDER</button>
         </div>
       )}
     </div>
   );
 }
-
-/* ================= STYLES ================= */
 
 const styles = {
   page: {
@@ -180,99 +155,42 @@ const styles = {
 
   logo: {
     color: "#f5c542",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-
-  table: {
-    opacity: 0.7,
   },
 
   search: {
     width: "100%",
-    padding: 12,
-    borderRadius: 12,
-    border: "none",
+    padding: 10,
     marginTop: 10,
-    marginBottom: 20,
-  },
-
-  section: {
-    marginBottom: 25,
+    marginBottom: 10,
   },
 
   sectionTitle: {
     color: "#f5c542",
-    marginBottom: 10,
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gap: 10,
+    marginTop: 15,
   },
 
   card: {
-    background: "#1a1a1a",
-    padding: 14,
-    borderRadius: 14,
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
-  },
-
-  itemName: {
-    fontWeight: "bold",
-  },
-
-  price: {
-    opacity: 0.7,
-    fontSize: 13,
-  },
-
-  addBtn: {
-    background: "#f5c542",
-    border: "none",
+    padding: 10,
+    background: "#1a1a1a",
+    marginBottom: 8,
     borderRadius: 10,
-    padding: "6px 12px",
-    fontWeight: "bold",
-    cursor: "pointer",
   },
 
-  cartBar: {
+  cart: {
     position: "fixed",
     bottom: 0,
     left: 0,
     right: 0,
-    background: "#141414",
-    padding: 14,
+    background: "#111",
+    padding: 12,
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
-    borderTop: "1px solid #333",
-  },
-
-  orderBtn: {
-    background: "#f5c542",
-    border: "none",
-    padding: "10px 14px",
-    borderRadius: 10,
-    fontWeight: "bold",
-  },
-
-  tableGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    gap: 10,
-    marginTop: 20,
   },
 
   tableBtn: {
-    padding: 15,
-    borderRadius: 12,
-    border: "none",
-    background: "#f5c542",
-    fontWeight: "bold",
-    cursor: "pointer",
+    margin: 5,
+    padding: 10,
   },
 };
