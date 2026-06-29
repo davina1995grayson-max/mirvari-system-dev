@@ -23,12 +23,12 @@ export default function Page() {
         grouped[item.category].push(item);
       });
 
-      setMenuData(
-        Object.keys(grouped).map((cat) => ({
-          title: cat,
-          items: grouped[cat],
-        }))
-      );
+      const formatted = Object.keys(grouped).map((cat) => ({
+        title: cat,
+        items: grouped[cat],
+      }));
+
+      setMenuData(formatted);
     };
 
     loadMenu();
@@ -79,8 +79,7 @@ export default function Page() {
   if (table === null) {
     return (
       <div style={styles.page}>
-        <h2 style={styles.logo}>🍽️ MIRVARI RESTAURANT</h2>
-
+        <h2 style={styles.logo}>🍽️ MIRVARI</h2>
         <p>Выбери стол</p>
 
         <div style={styles.tableGrid}>
@@ -99,6 +98,13 @@ export default function Page() {
   }
 
   // MAIN UI
+  const filteredMenu = menuData.map((section) => ({
+    ...section,
+    items: section.items.filter((item) =>
+      item.name.toLowerCase().includes(search.toLowerCase())
+    ),
+  }));
+
   return (
     <div style={styles.page}>
       {/* HEADER */}
@@ -110,36 +116,32 @@ export default function Page() {
       {/* SEARCH */}
       <input
         style={styles.search}
-        placeholder="Search dishes..."
+        placeholder="Search..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
       {/* MENU */}
-      {menuData.map((section) => (
+      {filteredMenu.map((section) => (
         <div key={section.title} style={styles.section}>
           <h2 style={styles.sectionTitle}>{section.title}</h2>
 
           <div style={styles.grid}>
-            {section.items
-              .filter((item) =>
-                item.name.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((item) => (
-                <div key={item.name} style={styles.card}>
-                  <div>
-                    <div style={styles.itemName}>{item.name}</div>
-                    <div style={styles.price}>{item.price} AZN</div>
-                  </div>
-
-                  <button
-                    style={styles.addBtn}
-                    onClick={() => addToCart(item)}
-                  >
-                    +
-                  </button>
+            {section.items.map((item) => (
+              <div key={item.name} style={styles.card}>
+                <div>
+                  <div style={styles.itemName}>{item.name}</div>
+                  <div style={styles.price}>{item.price} AZN</div>
                 </div>
-              ))}
+
+                <button
+                  style={styles.addBtn}
+                  onClick={() => addToCart(item)}
+                >
+                  +
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       ))}
@@ -147,7 +149,7 @@ export default function Page() {
       {/* CART BAR */}
       {cart.length > 0 && (
         <div style={styles.cartBar}>
-          <span>🛒 {cart.length} items</span>
+          <span>🛒 {cart.length}</span>
           <span>{total} AZN</span>
 
           <button style={styles.orderBtn} onClick={order}>
@@ -274,4 +276,3 @@ const styles = {
     cursor: "pointer",
   },
 };
-                }
