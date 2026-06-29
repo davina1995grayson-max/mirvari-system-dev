@@ -16,18 +16,16 @@ export default function Page() {
       const grouped = {};
 
       data?.forEach((item) => {
-        if (!grouped[item.category]) {
-          grouped[item.category] = [];
-        }
+        if (!grouped[item.category]) grouped[item.category] = [];
         grouped[item.category].push(item);
       });
 
-      setMenuData(
-        Object.keys(grouped).map((cat) => ({
-          title: cat,
-          items: grouped[cat],
-        }))
-      );
+      const formatted = Object.keys(grouped).map((cat) => ({
+        title: cat,
+        items: grouped[cat],
+      }));
+
+      setMenuData(formatted);
     };
 
     loadMenu();
@@ -71,7 +69,7 @@ export default function Page() {
     );
   };
 
-  // STEP 1: choose table
+  // STEP 1: TABLE SELECT
   if (table === null) {
     return (
       <div style={styles.page}>
@@ -80,8 +78,8 @@ export default function Page() {
         {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
           <button
             key={num}
-            style={styles.tableBtn}
             onClick={() => setTable(num)}
+            style={styles.tableBtn}
           >
             🪑 {num}
           </button>
@@ -93,10 +91,9 @@ export default function Page() {
   // MAIN UI
   return (
     <div style={styles.page}>
-      <div style={styles.header}>
-        <h1 style={styles.logo}>🍽️ MIRVARI</h1>
-        <div>🪑 {table}</div>
-      </div>
+      <h1 style={styles.logo}>🍽️ MIRVARI</h1>
+
+      <div>🪑 Table: {table}</div>
 
       <input
         style={styles.search}
@@ -147,20 +144,14 @@ const styles = {
     fontFamily: "Arial",
   },
 
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
   logo: {
     color: "#f5c542",
+    marginBottom: 10,
   },
 
   search: {
     width: "100%",
     padding: 10,
-    marginTop: 10,
     marginBottom: 10,
   },
 
