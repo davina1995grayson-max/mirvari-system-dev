@@ -129,19 +129,20 @@ const addToCart = (item, e) => {
 
   if (!btn || !cartEl) return;
 
-  // 🟡 создаём "пузырёк товара"
-  const flyEl = document.createElement("div");
-  flyEl.innerText = "🟡";
-  flyEl.style.position = "fixed";
-  flyEl.style.left = btn.getBoundingClientRect().left + "px";
-  flyEl.style.top = btn.getBoundingClientRect().top + "px";
-  flyEl.style.fontSize = "20px";
-  flyEl.style.zIndex = 9999;
-  flyEl.style.transition = "all 0.7s cubic-bezier(.5,-0.5,.5,1.5)";
-  flyEl.style.pointerEvents = "none";
+  // 🍽️ анимация добавления в корзину
+const flyEl = document.createElement("div");
+flyEl.innerText = "🍽️";
+flyEl.style.position = "fixed";
+flyEl.style.left = btn.getBoundingClientRect().left + "px";
+flyEl.style.top = btn.getBoundingClientRect().top + "px";
+flyEl.style.fontSize = "18px";
+flyEl.style.zIndex = 9999;
+flyEl.style.transition = "all 0.8s cubic-bezier(.2,.9,.2,1)";
+flyEl.style.pointerEvents = "none";
+flyEl.style.transform = "scale(1)";
+flyEl.style.opacity = "1";
 
-  document.body.appendChild(flyEl);
-
+document.body.appendChild(flyEl);
   const cartRect = cartEl.getBoundingClientRect();
 
   requestAnimationFrame(() => {
