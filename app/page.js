@@ -1021,27 +1021,28 @@ const addToCart = (item, e) => {
       )}
 
       {/* FLOATING BUTTON */}
-      <div
+     <div
   ref={cartRef}
   onClick={() => setCartOpen(true)}
-        style={{
-          position: "fixed",
-          right: 20,
-          bottom: 20,
-          width: 62,
-          height: 62,
-          borderRadius: "50%",
-          background: "#f5c542",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 22,
-          cursor: "pointer",
-          zIndex: 9999
-        }}
-      >
-        🛒 {cart.length}
-      </div>
+  style={{
+    position: "fixed",
+    right: 20,
+    bottom: 20,
+    width: 64,
+    height: 64,
+    borderRadius: "50%",
+    background: "linear-gradient(135deg, #f5c542, #d8a92e)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 22,
+    cursor: "pointer",
+    zIndex: 9999,
+    boxShadow: "0 10px 25px rgba(245,197,66,0.35)"
+  }}
+>
+  🛒 {cart.length}
+</div>
 
     </div>
   );
