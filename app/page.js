@@ -793,27 +793,31 @@ document.body.appendChild(flyEl);
 
       {/* MODAL */}
       {cartOpen && (
-        <div
-          onClick={() => setCartOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <div
+       <div
+  onClick={() => setCartOpen(false)}
+  style={{
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.65)",
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    zIndex: 99999,
+    animation: "fadeIn 0.25s ease"
+  }}
+><div
   onClick={(e) => e.stopPropagation()}
   style={{
     background: card,
-    width: "90%",
-    maxWidth: 400,
-    height: "80vh",
+    width: "100%",
+    maxWidth: 420,
+    height: "75vh",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     display: "flex",
     flexDirection: "column",
     padding: 20,
+    animation: "slideUp 0.3s ease"
   }}
 >
             <div
@@ -1048,3 +1052,14 @@ document.body.appendChild(flyEl);
     </div>
   );
 }
+<style jsx>{`
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+`}</style>
