@@ -11,8 +11,6 @@ export default function Page() {
   const [cart, setCart] = useState([]);
   const [table, setTable] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
-  const [dark, setDark] = useState(true);
-  const [lang, setLang] = useState("AZ"); 
   const [logoClicks, setLogoClicks] = useState(0);
   const [newItemName, setNewItemName] = useState("");
 const [newItemPrice, setNewItemPrice] = useState("");
@@ -313,11 +311,13 @@ const addToCart = (item, e) => {
   }
 
   return (
-    <div style={{ 
-    background: bg, 
-    color: textColor, 
-    minHeight: "100vh", 
-    padding: 20 }}>
+    <div style={{
+  background: "#0b0b0b",
+  color: "white",
+  minHeight: "100vh",
+  padding: 20,
+  fontFamily: "Inter, sans-serif"
+}}>
 
       {/* HEADER */}
        <div style={{
