@@ -8,6 +8,7 @@ export default function Page() {
 
   const [openCategory, setOpenCategory] = useState(null);
   const [openedMenu, setOpenedMenu] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(null);
   const [cart, setCart] = useState([]);
   const [table, setTable] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
@@ -19,6 +20,32 @@ const [selectedSection, setSelectedSection] = useState("");
 const pressTimer = useRef(null);
     const [menuData, setMenuData] = useState([]);
 const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+  const handleScroll = () => {
+    const sections = menuData.map(s => s.title);
+
+    let current = null;
+
+    sections.forEach(title => {
+      const el = document.getElementById(title);
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+
+      if (rect.top <= 120 && rect.bottom >= 120) {
+        current = title;
+      }
+    });
+
+    if (current) {
+      setActiveCategory(current);
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [menuData]);
 
 useEffect(() => {
 
@@ -643,15 +670,18 @@ document.body.appendChild(flyEl);
       onClick={() =>
         document.getElementById(section.title)?.scrollIntoView({ behavior: "smooth" })
       }
-      style={{
-        whiteSpace: "nowrap",
-        padding: "8px 12px",
-        borderRadius: 20,
-        border: "1px solid #f5c542",
-        background: "#1e1e1e",
-        color: "#f5c542",
-        cursor: "pointer"
-      }}
+style={{
+  whiteSpace: "nowrap",
+  padding: "8px 12px",
+  borderRadius: 20,
+  border: "1px solid #f5c542",
+  cursor: "pointer",
+  background:
+    activeCategory === section.title ? "#f5c542" : "#1e1e1e",
+  color: activeCategory === section.title ? "#111" : "#f5c542",
+  fontWeight: "bold",
+  transition: "0.2s"
+}}
     >
       {section.title}
     </button>
