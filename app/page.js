@@ -674,21 +674,46 @@ const addToCart = (item, e) => {
     return matchSearch && item.available;
   })
   .map(item => (
-              <div
-                key={item.name}
-                style={{
-  background: dark ? "#151515" : "#ffffff",
-  marginTop: 10,
-  padding: "14px 16px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  borderRadius: 16,
-  border: "1px solid rgba(245,197,66,0.12)",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-  transition: "all 0.2s ease",
-}}
-              >
+             <div
+  key={item.name}
+  style={{
+    background: "#151515",
+    padding: 14,
+    borderRadius: 16,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 10,
+    border: "1px solid rgba(245,197,66,0.12)"
+  }}
+>
+  
+  <div>
+    <div style={{ color: "white", fontSize: 16 }}>
+      {item.name}
+    </div>
+
+    <div style={{ color: "#f5c542", marginTop: 4 }}>
+      {item.price} AZN
+    </div>
+  </div>
+
+  <button
+    onClick={(e) => addToCart(item, e)}
+    style={{
+      background: "#f5c542",
+      border: "none",
+      borderRadius: 10,
+      width: 38,
+      height: 38,
+      fontWeight: "bold",
+      cursor: "pointer"
+    }}
+  >
+    +
+  </button>
+
+</div>
           
                 <div>
   <div
