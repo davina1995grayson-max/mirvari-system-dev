@@ -630,10 +630,37 @@ document.body.appendChild(flyEl);
     ))}
     </div>
 )}
-      
+      <div style={{
+  display: "flex",
+  gap: 10,
+  overflowX: "auto",
+  padding: "10px 0",
+  marginBottom: 10
+}}>
+  {menuData.map(section => (
+    <button
+      key={section.title}
+      onClick={() =>
+        document.getElementById(section.title)?.scrollIntoView({ behavior: "smooth" })
+      }
+      style={{
+        whiteSpace: "nowrap",
+        padding: "8px 12px",
+        borderRadius: 20,
+        border: "1px solid #f5c542",
+        background: "#1e1e1e",
+        color: "#f5c542",
+        cursor: "pointer"
+      }}
+    >
+      {section.title}
+    </button>
+  ))}
+</div>
+
       {/* MENU */}
       {menuData.map(section => (
-        <div key={section.title}>
+       <div key={section.title} id={section.title}>
           <h2
   onClick={() =>
     setOpenedMenu(
